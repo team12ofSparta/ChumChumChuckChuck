@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @Builder
 public class ExceptionDto {
 
-    private int statusCode;
+    private Integer statusCode;
     private HttpStatus state;
     private String message;
 

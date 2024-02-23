@@ -9,6 +9,7 @@ import lombok.Setter;
 @Builder
 public class ResponseDto<T> {
 
+    private Integer statusCode;
     private String message;
     private T data;
 
