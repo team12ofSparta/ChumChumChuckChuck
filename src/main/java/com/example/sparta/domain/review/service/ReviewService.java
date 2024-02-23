@@ -5,7 +5,6 @@ import com.example.sparta.domain.review.dto.ReviewResponseDto;
 import com.example.sparta.domain.review.entity.Review;
 import com.example.sparta.domain.review.repository.ReviewRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
