@@ -1,8 +1,6 @@
-package com.example.sparta.domain.review.entity;
+package com.example.sparta.domain.menu.entity;
 
-import com.example.sparta.domain.menu.entity.Menu;
 import com.example.sparta.domain.store.entity.Store;
-import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.entity.Timestamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,28 +19,26 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "reviews")
-public class Review extends Timestamped {
+@Table(name = "menus")
+public class Menu extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    private Long menuId;
 
     @Column(nullable = false)
-    private Integer rating;
+    private String name;
 
-    @Column
-    private String content;
+    @Column(nullable = false)
+    private Integer price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @JoinColumn(name = "store_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    @JoinColumn(name = "menu_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Menu menu;
+    public Menu(String name, Integer price, Store store) {
+        this.name = name;
+        this.price = price;
+        this.store = store;
+    }
 }

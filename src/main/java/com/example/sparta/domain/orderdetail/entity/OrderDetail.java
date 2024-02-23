@@ -1,6 +1,7 @@
-package com.example.sparta.domain.review.entity;
+package com.example.sparta.domain.orderdetail.entity;
 
 import com.example.sparta.domain.menu.entity.Menu;
+import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.entity.Timestamped;
@@ -21,28 +22,36 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "reviews")
-public class Review extends Timestamped {
+@Table(name = "order_details")
+public class OrderDetail extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    private Long orderDetailId;
 
     @Column(nullable = false)
-    private Integer rating;
-
-    @Column
-    private String content;
+    private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @JoinColumn(name = "store_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    @JoinColumn(name = "menu_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
+
+    public OrderDetail(Integer quantity, Store store, Order order, Menu menu) {
+        this.quantity = quantity;
+        this.store = store;
+        this.order = order;
+        this.menu = menu;
+    }
 }

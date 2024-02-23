@@ -1,6 +1,5 @@
-package com.example.sparta.domain.review.entity;
+package com.example.sparta.domain.order.entity;
 
-import com.example.sparta.domain.menu.entity.Menu;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.entity.Timestamped;
@@ -21,28 +20,27 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "reviews")
-public class Review extends Timestamped {
+@Table(name = "orders")
+public class Order extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    private Long orderId;
 
     @Column(nullable = false)
-    private Integer rating;
+    private Integer totalPrice;
 
     @Column
-    private String content;
+    private String requests;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private Integer status;
+
     @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @JoinColumn(name = "store_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Store store;
-
-    @JoinColumn(name = "menu_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Menu menu;
 }
