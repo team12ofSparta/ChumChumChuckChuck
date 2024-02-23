@@ -16,35 +16,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ReviewController {
+
     private final ReviewService reviewService;
 
     //모든 리뷰조회
     @GetMapping("/reviews")
-    public List<ReviewResponseDto> allReviews(){
+    public List<ReviewResponseDto> allReviews() {
         return reviewService.findAll();
     }
 
     //단건 리뷰조회
     @GetMapping("/reviews/{reviewId}")
-    public ReviewResponseDto OneReview(@PathVariable Long reviewId){
+    public ReviewResponseDto OneReview(@PathVariable Long reviewId) {
         return reviewService.findOne(reviewId);
     }
 
     //리뷰수정
     @PutMapping("/reviews/{reviewId}")
-    public ReviewResponseDto updateReview(@PathVariable Long reviewId, @RequestBody ReviewRequestDto reviewRequestDto){
+    public ReviewResponseDto updateReview(@PathVariable Long reviewId, @RequestBody ReviewRequestDto reviewRequestDto) {
         return reviewService.updateOne(reviewId, reviewRequestDto);
     }
 
     //리뷰 등록
     @PostMapping("/reviews")
-    public ReviewResponseDto registerReview(@RequestBody ReviewRequestDto reviewRequestDto){
+    public ReviewResponseDto registerReview(@RequestBody ReviewRequestDto reviewRequestDto) {
         return reviewService.register(reviewRequestDto);
     }
 
     //리뷰 삭제
     @DeleteMapping("/reviews/{reviewId}")
-    public void deleteReview(@PathVariable Long reviewId){
+    public void deleteReview(@PathVariable Long reviewId) {
         reviewService.deleteOne(reviewId);
     }
 }
