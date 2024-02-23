@@ -1,6 +1,7 @@
 package com.example.sparta.domain.review.entity;
 
 import com.example.sparta.domain.menu.entity.Menu;
+import com.example.sparta.domain.review.dto.ReviewRequestDto;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.entity.Timestamped;
@@ -45,4 +46,9 @@ public class Review extends Timestamped {
     @JoinColumn(name = "menu_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Menu menu;
+
+    public Review(ReviewRequestDto reviewRequestDto){
+        this.rating = reviewRequestDto.getRating();
+        this.content = reviewRequestDto.getContent();
+    }
 }
