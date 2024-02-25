@@ -32,7 +32,6 @@ public class ReviewService {
         Review review = reviewRepository.findById(id).get();
         review.setRating(reviewRequestDto.getRating());
         review.setContent(reviewRequestDto.getContent());
-        review.setModifiedAt(LocalDateTime.now());
         Review reviewSave = reviewRepository.save(review);
 
         return new ReviewResponseDto(reviewSave);
@@ -41,8 +40,6 @@ public class ReviewService {
     //리뷰 등록
     public ReviewResponseDto register(ReviewRequestDto reviewRequestDto) {
         Review review = new Review(reviewRequestDto);
-        review.setCreatedAt(LocalDateTime.now());
-        review.setModifiedAt(LocalDateTime.now());
 
         return new ReviewResponseDto(reviewRepository.save(review));
     }
