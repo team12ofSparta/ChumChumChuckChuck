@@ -34,7 +34,7 @@ public class Order extends Timestamped {
     private String requests;
 
     @Column(nullable = false)
-    private Integer status;
+    private Integer orderStatus;
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
