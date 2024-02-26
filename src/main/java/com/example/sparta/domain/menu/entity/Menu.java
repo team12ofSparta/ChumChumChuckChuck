@@ -30,13 +30,13 @@ public class Menu extends Timestamped {
     private String name;
 
     @Column(nullable = false)
-    private Integer price;
+    private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    public Menu(String name, Integer price, Store store) {
+    public Menu(String name, Long price, Store store) {
         this.name = name;
         this.price = price;
         this.store = store;
