@@ -1,5 +1,7 @@
 package com.example.sparta.domain.user.entity;
 
+import com.example.sparta.domain.user.dto.UserPasswordUpdateRequestDto;
+import com.example.sparta.domain.user.dto.UserProfileUpdateRequestDto;
 import com.example.sparta.global.entity.Timestamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -47,4 +50,20 @@ public class User extends Timestamped {
         this.address = address;
     }
 
+    public void userUpdate(UserProfileUpdateRequestDto userProfileReworkRequestDto) {
+        if(userProfileReworkRequestDto.getName()!=null){
+            this.name = userProfileReworkRequestDto.getName();
+        }
+        if(userProfileReworkRequestDto.getAddress() != null){
+            this.address = userProfileReworkRequestDto.getAddress();
+        }
+    }
+    public void userPasswordUpdate(
+        UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
+        PasswordEncoder passwordEncoder) {
+
+        if (userPasswordUpdateRequestDto.getNewpassword() != null) {
+            this.password = passwordEncoder.encode(userPasswordUpdateRequestDto.getNewpassword());
+        }
+    }
 }
