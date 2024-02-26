@@ -36,7 +36,6 @@ public class RepositoryTest {
     user.setEmail("repo@sparta.com");
 
     Store store = new Store(requestDto,user);
-
     //when
     //create
         Store save = storeRepository.save(store);
