@@ -1,7 +1,6 @@
 package com.example.sparta.domain.store.controller;
 
 import com.example.sparta.domain.store.dto.StoreRequestDto;
-import com.example.sparta.domain.store.dto.StoreResponseDto;
 import com.example.sparta.domain.store.service.StoreService;
 import com.example.sparta.global.dto.ResponseDto;
 import com.example.sparta.global.impl.UserDetailsImpl;
@@ -12,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
