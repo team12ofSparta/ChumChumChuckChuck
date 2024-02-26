@@ -13,4 +13,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
 
     @Query("select o from OrderDetail o where o.user.userId = ?1 and o.order is null")
     List<OrderDetail> findAllByUserAndOrderIsNull(Long userId);
+
+    List<OrderDetail> findAllByOrder(Order order);
 }

@@ -42,4 +42,19 @@ public class OrderService {
         }
         return new OrderResponseDto(savedOrder, orderDetailIdList, menuNameList, menuQuantityList);
     }
+
+    public OrderResponseDto getOrder(User user, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문번호입니다."));
+        List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
+        List<Long> orderDetailIdList = new ArrayList<>();
+        List<String> menuNameList = new ArrayList<>();
+        List<Integer> menuQuantityList = new ArrayList<>();
+        for (OrderDetail orderDetail : orderDetailList) {
+            orderDetailIdList.add(orderDetail.getOrderDetailId());
+            menuNameList.add(orderDetail.getMenu().getName());
+            menuQuantityList.add(orderDetail.getQuantity());
+        }
+        return new OrderResponseDto(order, orderDetailIdList, menuNameList, menuQuantityList);
+    }
 }

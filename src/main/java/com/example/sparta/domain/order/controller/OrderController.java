@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +36,26 @@ public class OrderController {
                 .message("주문생성 완료")
                 .data(orderResponseDto)
                 .build());
+    }
+    @GetMapping("/{orderId}")
+    public ResponseEntity<ResponseDto<OrderResponseDto>> getOrder(
+        @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long orderId){
+        OrderResponseDto orderResponseDto;
+        try {
+            orderResponseDto = orderService.getOrder(userDetails.getUser(), orderId);
+        }catch(IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseDto.<OrderResponseDto>builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .message(e.getMessage())
+                .data(null)
+                .build()
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.<OrderResponseDto>builder()
+            .statusCode(HttpStatus.OK.value())
+            .message("주문 ID를 통한 주문 조회 성공")
+            .data(orderResponseDto)
+            .build()
+        );
     }
 }
