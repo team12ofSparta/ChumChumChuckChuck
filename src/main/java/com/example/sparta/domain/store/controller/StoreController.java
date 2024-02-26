@@ -3,6 +3,7 @@ package com.example.sparta.domain.store.controller;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.dto.StoreResponseDto;
 import com.example.sparta.domain.store.service.StoreService;
+import com.example.sparta.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,36 +20,66 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping()
-    public ResponseEntity<StoreResponseDto> CreateStore(@RequestBody StoreRequestDto storeRequestDto){//@AuthenticationPrincipal UserDetailsImpl userDetails
+    public ResponseEntity<?> CreateStore(@RequestBody StoreRequestDto storeRequestDto){//@AuthenticationPrincipal UserDetailsImpl userDetails
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(storeService.createStore(storeRequestDto));
+                .body(ResponseDto
+                        .builder()
+                        .statusCode(201)
+                        .data(storeService.createStore(storeRequestDto))
+                        .message("새로운 가게가 등록되었습니다.")
+                        .build());
     }
     @GetMapping
-    public ResponseEntity<List<StoreResponseDto>> GetAllStore(){
+    public ResponseEntity<?> GetAllStore(){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(storeService.getAllStore());
+                .body(ResponseDto
+                        .builder()
+                        .statusCode(200)
+                        .data(storeService.getAllStore())
+                        .message("모든 가게를 조회합니다.")
+                        .build());
     }
     @PutMapping("/{storeId}")
-    public ResponseEntity<Long> EditStoreDetails(@PathVariable(name = "storeId") Long id,@RequestBody StoreRequestDto storeRequestDto){
+    public ResponseEntity<?> EditStoreDetails(@PathVariable(name = "storeId") Long id,@RequestBody StoreRequestDto storeRequestDto){
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(storeService.editStore(id,storeRequestDto));
+                .body(ResponseDto
+                        .builder()
+                        .statusCode(201)
+                        .data(storeService.editStore(id,storeRequestDto))
+                        .message("가게가 정보가 수정 되었습니다.")
+                        .build());
     }
     @DeleteMapping("/{storeId}")
-    public ResponseEntity<Long> DeleteStore(@PathVariable(name = "storeId") Long id){
+    public ResponseEntity<?> DeleteStore(@PathVariable(name = "storeId") Long id){
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(storeService.deleteStore(id));
+                .body(ResponseDto
+                        .builder()
+                        .statusCode(201)
+                        .data(storeService.deleteStore(id))
+                        .message("가게사 삭제 되었습니다.")
+                        .build());
     }
     /// 검색 조회 시작.
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreResponseDto> GetStoreById(@PathVariable(name = "storeId") Long id){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(storeService.getAllStoreById(id));
+    public ResponseEntity<?> GetStoreById(@PathVariable(name = "storeId") Long id){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseDto
+                        .builder()
+                        .statusCode(201)
+                        .data(storeService.getStoreById(id))
+                        .message("가게 id : ."+id+" 를 가져옵니다")
+                        .build());
     }
     //extra
     @GetMapping("/search")
-    public ResponseEntity<List<StoreResponseDto>> GetStoreByName(@RequestParam(name = "name") String name){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(storeService.getAllStoreByName(name));
+    public ResponseEntity<?> GetStoreByName(@RequestParam(name = "name") String name){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseDto
+                        .builder()
+                        .statusCode(201)
+                        .data(storeService.getAllStoreByName(name))
+                        .message("검색 : "+name+" 을 조회")
+                        .build());
     }
 
 }

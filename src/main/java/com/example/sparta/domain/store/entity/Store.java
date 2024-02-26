@@ -23,7 +23,7 @@ public class Store extends Timestamped {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user",nullable = false)
+    @JoinColumn(name = "user")
     private User owner;
 
     @Column(nullable = false)
