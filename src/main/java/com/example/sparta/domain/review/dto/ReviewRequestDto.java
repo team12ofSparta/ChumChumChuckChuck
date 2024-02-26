@@ -1,5 +1,8 @@
 package com.example.sparta.domain.review.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import lombok.Getter;
@@ -12,5 +15,4 @@ public class ReviewRequestDto {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAy;
-
 }
