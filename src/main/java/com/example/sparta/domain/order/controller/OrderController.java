@@ -39,20 +39,21 @@ public class OrderController {
                 .data(orderResponseDto)
                 .build());
     }
-  
+
     @GetMapping("/{orderId}")
     public ResponseEntity<ResponseDto<OrderResponseDto>> getOrder(
-        @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long orderId){
+        @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long orderId) {
         OrderResponseDto orderResponseDto;
         try {
             orderResponseDto = orderService.getOrder(userDetails.getUser(), orderId);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseDto.<OrderResponseDto>builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .message(e.getMessage())
-                .data(null)
-                .build()
-            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ResponseDto.<OrderResponseDto>builder()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .message(e.getMessage())
+                    .data(null)
+                    .build()
+                );
         }
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.<OrderResponseDto>builder()
             .statusCode(HttpStatus.OK.value())
@@ -65,22 +66,22 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<ResponseDto<List<OrderResponseDto>>> getOrderList(
         @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
-      List<OrderResponseDto>  orderResponseDtoList;
-      try {
-          orderResponseDtoList = orderService.getOrderList(userDetails.getUser());
-      }catch (NoSuchElementException e){
-          return ResponseEntity.badRequest().body(ResponseDto.<List<OrderResponseDto>>builder()
-              .statusCode(HttpStatus.BAD_REQUEST.value())
-              .message(e.getMessage())
-              .data(null)
-              .build());
-      }
-      return ResponseEntity.ok().body(ResponseDto.<List<OrderResponseDto>>builder()
-              .statusCode(HttpStatus.OK.value())
-              .message("주문 목록 조회 성공")
-              .data(orderResponseDtoList)
-              .build()
-          );
+    ) {
+        List<OrderResponseDto> orderResponseDtoList;
+        try {
+            orderResponseDtoList = orderService.getOrderList(userDetails.getUser());
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body(ResponseDto.<List<OrderResponseDto>>builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .message(e.getMessage())
+                .data(null)
+                .build());
+        }
+        return ResponseEntity.ok().body(ResponseDto.<List<OrderResponseDto>>builder()
+            .statusCode(HttpStatus.OK.value())
+            .message("주문 목록 조회 성공")
+            .data(orderResponseDtoList)
+            .build()
+        );
     }
 }
