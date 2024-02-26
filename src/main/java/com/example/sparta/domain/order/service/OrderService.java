@@ -49,18 +49,20 @@ public class OrderService {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문번호입니다."));
         return orderResponseDtoMaker(order);
     }
+
     public List<OrderResponseDto> getOrderList(User user) {
         List<OrderResponseDto> orderResponseDtoList = new ArrayList<>();
         List<Order> orderList = orderRepository.findByUser(user);
-        if(orderList.isEmpty()){
+        if (orderList.isEmpty()) {
             throw new NoSuchElementException("주문내역이 존재하지 않습니다.");
         }
-        for(Order order : orderList){
+        for (Order order : orderList) {
             orderResponseDtoList.add(orderResponseDtoMaker(order));
         }
         return orderResponseDtoList;
     }
-    private OrderResponseDto orderResponseDtoMaker(Order order){
+
+    private OrderResponseDto orderResponseDtoMaker(Order order) {
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
         List<Long> orderDetailIdList = new ArrayList<>();
         List<String> menuNameList = new ArrayList<>();
