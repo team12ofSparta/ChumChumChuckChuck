@@ -1,4 +1,4 @@
-package com.example.sparta.StoreTest.ControllerTest;
+package com.example.sparta.StoreTest.controllerTest;
 
 
 import com.example.sparta.domain.store.controller.StoreController;
@@ -6,6 +6,7 @@ import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.service.StoreService;
 import com.example.sparta.domain.user.entity.User;
 
+import com.example.sparta.global.MockSpringSecurityFilter;
 import com.example.sparta.global.config.WebSecurityConfig;
 
 import com.example.sparta.global.impl.UserDetailsImpl;
