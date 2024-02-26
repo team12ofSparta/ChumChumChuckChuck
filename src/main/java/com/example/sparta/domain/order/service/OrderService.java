@@ -28,7 +28,7 @@ public class OrderService {
         List<Long> orderDetailIdList = new ArrayList<>();
         List<String> menuNameList = new ArrayList<>();
         List<Integer> menuQuantityList = new ArrayList<>();
-        Store store = orderDetailList.getFirst().getStore();
+        Store store = orderDetailList.get(0).getStore();
         for (OrderDetail orderDetail : orderDetailList) {
             totalPrice += orderDetail.getMenu().getPrice() * orderDetail.getQuantity();
             orderDetailIdList.add(orderDetail.getOrderDetailId());
