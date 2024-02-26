@@ -44,8 +44,6 @@ public class StoreController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(storeService.getAllStoreById(id));
     }
-
-
     //extra
     @GetMapping("/search")
     public ResponseEntity<List<StoreResponseDto>> GetStoreByName(@RequestParam(name = "name") String name){
