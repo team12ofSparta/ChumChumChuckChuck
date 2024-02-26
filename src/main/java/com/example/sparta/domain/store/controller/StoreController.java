@@ -4,6 +4,7 @@ import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.dto.StoreResponseDto;
 import com.example.sparta.domain.store.service.StoreService;
 import com.example.sparta.global.dto.ResponseDto;
+import com.example.sparta.global.impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +21,12 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping()
-    public ResponseEntity<?> CreateStore(@RequestBody StoreRequestDto storeRequestDto){//@AuthenticationPrincipal UserDetailsImpl userDetails
+    public ResponseEntity<?> CreateStore(@RequestBody StoreRequestDto storeRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto
                         .builder()
                         .statusCode(201)
-                        .data(storeService.createStore(storeRequestDto))
+                        .data(storeService.createStore(storeRequestDto,userDetails.getUser()))
                         .message("새로운 가게가 등록되었습니다.")
                         .build());
     }
@@ -41,20 +42,20 @@ public class StoreController {
     }
     @PutMapping("/{storeId}")
     public ResponseEntity<?> EditStoreDetails(@PathVariable(name = "storeId") Long id,@RequestBody StoreRequestDto storeRequestDto){
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(ResponseDto
                         .builder()
-                        .statusCode(201)
+                        .statusCode(202)
                         .data(storeService.editStore(id,storeRequestDto))
                         .message("가게가 정보가 수정 되었습니다.")
                         .build());
     }
     @DeleteMapping("/{storeId}")
     public ResponseEntity<?> DeleteStore(@PathVariable(name = "storeId") Long id){
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(ResponseDto
                         .builder()
-                        .statusCode(201)
+                        .statusCode(202)
                         .data(storeService.deleteStore(id))
                         .message("가게사 삭제 되었습니다.")
                         .build());
@@ -62,10 +63,10 @@ public class StoreController {
     /// 검색 조회 시작.
     @GetMapping("/{storeId}")
     public ResponseEntity<?> GetStoreById(@PathVariable(name = "storeId") Long id){
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto
                         .builder()
-                        .statusCode(201)
+                        .statusCode(200)
                         .data(storeService.getStoreById(id))
                         .message("가게 id : ."+id+" 를 가져옵니다")
                         .build());
@@ -73,10 +74,10 @@ public class StoreController {
     //extra
     @GetMapping("/search")
     public ResponseEntity<?> GetStoreByName(@RequestParam(name = "name") String name){
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto
                         .builder()
-                        .statusCode(201)
+                        .statusCode(200)
                         .data(storeService.getAllStoreByName(name))
                         .message("검색 : "+name+" 을 조회")
                         .build());

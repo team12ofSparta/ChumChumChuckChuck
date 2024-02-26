@@ -49,7 +49,7 @@ public class Store extends Timestamped {
 
     public Store(StoreRequestDto requestDto,User user){
         name = requestDto.getName();
-        //owner = user;
+        owner = user;
         category = requestDto.getCategory();
         address = requestDto.getAddress();
         content = requestDto.getContent();
