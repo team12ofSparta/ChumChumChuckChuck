@@ -89,13 +89,18 @@ public class OrderDetailService {
     }
 
     @Transactional
-    public OrderDetailResponseDto updateOrderDetail(Long orderDetailId, Integer quantity, User user) {
+    public OrderDetailResponseDto updateOrderDetail(Long orderDetailId, Integer quantity,
+        User user) {
 
         OrderDetail orderDetail = validateOrderDetail(orderDetailId, user);
 
         validateQuantity(quantity);
 
         orderDetail.setQuantity(quantity);
+
+        return OrderDetailResponseDto.builder().menuId(orderDetail.getMenu().getMenuId())
+            .menuName(orderDetail.getMenu().getName()).menuPrice(orderDetail.getMenu().getPrice())
+            .quantity(orderDetail.getQuantity()).build();
     }
 
     private OrderDetail validateOrderDetail(Long orderDetailId, User user) {
@@ -103,7 +108,7 @@ public class OrderDetailService {
             () -> new NoSuchElementException("해당 상세 주문이 존재하지 않습니다.")
         );
 
-        if(!orderDetail.getUser().getUserId().equals(user.getUserId())) {
+        if (!orderDetail.getUser().getUserId().equals(user.getUserId())) {
             throw new IllegalArgumentException("유저 정보가 일치하지 않습니다.");
         }
 
@@ -111,7 +116,7 @@ public class OrderDetailService {
     }
 
     private void validateQuantity(Integer quantity) {
-        if(quantity < 0 || quantity > 999) {
+        if (quantity < 0 || quantity > 999) {
             throw new IllegalArgumentException("올바르지 않은 수량 입력입니다.");
         }
     }
