@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -81,6 +82,26 @@ public class OrderController {
             .statusCode(HttpStatus.OK.value())
             .message("주문 목록 조회 성공")
             .data(orderResponseDtoList)
+            .build()
+        );
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<ResponseDto<Void>> deleteOrder(
+        @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long orderId) {
+        try {
+            orderService.deleteOrder(userDetails.getUser(), orderId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(ResponseDto.<Void>builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .message(e.getMessage())
+                .data(null)
+                .build());
+        }
+        return ResponseEntity.ok().body(ResponseDto.<Void>builder()
+            .statusCode(HttpStatus.OK.value())
+            .message("주문 삭제 성공")
+            .data(null)
             .build()
         );
     }
