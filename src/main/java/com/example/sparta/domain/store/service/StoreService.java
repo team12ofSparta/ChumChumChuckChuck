@@ -4,6 +4,7 @@ import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.dto.StoreResponseDto;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.store.repository.StoreRepository;
+import com.example.sparta.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,9 @@ public class StoreService {
     private final StoreRepository storeRepository;
 
     public StoreResponseDto createStore(StoreRequestDto requestDto) {
-        Store store = new Store(requestDto);
+        //User user = userReposirty.findbyId.....
+        User user = new User();
+        Store store = new Store(requestDto,user);
         Store saveStore = storeRepository.save(store);
         return new StoreResponseDto(saveStore);
     }
@@ -58,7 +61,7 @@ public class StoreService {
         return responseDtoList;
     }
 
-    public StoreResponseDto getAllStoreById(Long id) {
+    public StoreResponseDto getStoreById(Long id) {
         Store store = storeRepository.findById(id).orElseThrow(()-> new NoSuchElementException("해당 가게를 찾을수 없어요."));
         return new StoreResponseDto(store);
     }
