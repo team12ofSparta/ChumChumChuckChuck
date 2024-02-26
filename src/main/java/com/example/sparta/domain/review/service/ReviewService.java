@@ -21,32 +21,51 @@ public class ReviewService {
     }
 
     //리뷰 단건조회
+    //리뷰가 존재하지 않으면 예외처리
     public ReviewResponseDto findOne(Long id) {
-        Review review = reviewRepository.findById(id).get();
+        Review review = reviewRepository.findById(id)
+            .orElseThrow(() -> new NullPointerException("리뷰가 존재하지 않습니다."));
 
         return new ReviewResponseDto(review);
     }
 
     //리뷰 수정
-    public ReviewResponseDto updateOne(Long id, ReviewRequestDto reviewRequestDto) { //todo 리펙토링 필요
-        Review review = reviewRepository.findById(id).get();
-        review.setRating(reviewRequestDto.getRating());
-        review.setContent(reviewRequestDto.getContent());
+    //잘못된 값 받을때 예외처리
+    //null 갑을 받을때 예외처리
+    public ReviewResponseDto updateOne(Long id, ReviewRequestDto reviewRequestDto) {
+
+        if (reviewRequestDto.getRating() == null) {
+            throw new IllegalArgumentException("Rating 올바른 값을 넣어주세요.");
+        }
+        Review review = reviewRepository.findById(id)
+            .orElseThrow(() -> new NullPointerException("수정할 리뷰가 없습니다."));
+        review.updateOne(reviewRequestDto.getRating(), reviewRequestDto.getContent());
         Review reviewSave = reviewRepository.save(review);
 
         return new ReviewResponseDto(reviewSave);
     }
 
     //리뷰 등록
+    //별점이 5이상 넘으면 예외처리
+    //null값을 받을때 예외처리
     public ReviewResponseDto register(ReviewRequestDto reviewRequestDto) {
+        if (reviewRequestDto.getRating() > 5) {
+            throw new IllegalArgumentException("rating 6이상할 수 없습니다.");
+        }
+        if (reviewRequestDto.getRating() == null) {
+            throw new NullPointerException("Rating 올바른 값을 넣어주세요.");
+        }
         Review review = new Review(reviewRequestDto);
 
         return new ReviewResponseDto(reviewRepository.save(review));
     }
 
     //리뷰 단일 삭제
-    public void deleteOne(Long id) { //todo 삭제된 상태 메세지 출력하기
-        Review review = reviewRepository.findById(id).get();
+    //리뷰가 존재하지 않으면 예외처리
+    public void deleteOne(Long id) {
+        Review review = reviewRepository.findById(id)
+            .orElseThrow(() -> new NullPointerException("존재하지 않는 리뷰입니다"));
+
         reviewRepository.delete(review);
     }
 }
