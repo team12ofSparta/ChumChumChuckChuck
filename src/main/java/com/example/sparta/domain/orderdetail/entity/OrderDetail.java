@@ -41,15 +41,16 @@ public class OrderDetail extends Timestamped {
     private Store store;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
 
-    public OrderDetail(Integer quantity, Store store, Order order, Menu menu) {
+    public OrderDetail(Integer quantity, User user, Store store, Order order, Menu menu) {
         this.quantity = quantity;
+        this.user = user;
         this.store = store;
         this.order = order;
         this.menu = menu;
