@@ -15,4 +15,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     List<OrderDetail> findAllByUserAndOrderIsNull(Long userId);
 
     List<OrderDetail> findAllByUser(User user);
+
+    List<OrderDetail> findAllByOrder(Order order);
 }

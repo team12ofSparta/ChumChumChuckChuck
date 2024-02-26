@@ -1,14 +1,13 @@
 package com.example.sparta.domain.orderdetail.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-public class AddOrderDetailRequestDto {
+public class OrderDetailRequestDto {
 
     private Integer quantity;
 
-    public AddOrderDetailRequestDto(Integer quantity) {
+    public OrderDetailRequestDto(Integer quantity) {
         this.quantity = quantity;
     }
 }
