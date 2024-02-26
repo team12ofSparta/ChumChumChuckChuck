@@ -1,8 +1,7 @@
 package com.example.sparta.domain.order.controller;
 
 import com.example.sparta.domain.order.dto.CreateOrderRequestDto;
-import com.example.sparta.domain.order.dto.CreateOrderResponseDto;
-import com.example.sparta.domain.order.entity.Order;
+import com.example.sparta.domain.order.dto.OrderResponseDto;
 import com.example.sparta.domain.order.service.OrderService;
 import com.example.sparta.global.dto.ResponseDto;
 import com.example.sparta.global.impl.UserDetailsImpl;
@@ -19,16 +18,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/orders")
 public class OrderController {
+
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<CreateOrderResponseDto>> createOrder(@RequestBody CreateOrderRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        Order order = orderService.createOrder(requestDto.getRequests(), userDetails.getUser());
-        CreateOrderResponseDto createOrderResponseDto = new CreateOrderResponseDto(order);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.<CreateOrderResponseDto>builder()
-            .statusCode(HttpStatus.CREATED.value())
-            .message("주문생성 완료")
-            .data(createOrderResponseDto)
-            .build());
+    public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder(
+        @RequestBody CreateOrderRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        OrderResponseDto orderResponseDto = orderService.createOrder(requestDto.getRequests(),
+            userDetails.getUser());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ResponseDto.<OrderResponseDto>builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .message("주문생성 완료")
+                .data(orderResponseDto)
+                .build());
     }
 }

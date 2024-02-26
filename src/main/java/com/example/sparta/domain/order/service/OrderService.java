@@ -1,11 +1,13 @@
 package com.example.sparta.domain.order.service;
 
+import com.example.sparta.domain.order.dto.OrderResponseDto;
 import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.order.repository.OrderRepository;
 import com.example.sparta.domain.orderdetail.entity.OrderDetail;
 import com.example.sparta.domain.orderdetail.repository.OrderDetailRepository;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,19 +21,25 @@ public class OrderService {
     private final OrderDetailRepository orderDetailRepository;
 
     @Transactional
-    public Order createOrder(String requests, User user) {
-        int totalPrice = 0;
+    public OrderResponseDto createOrder(String requests, User user) {
+        Long totalPrice = 0L;
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByUserAndOrder(user, null);
+        List<Long> orderDetailIdList = new ArrayList<>();
+        List<String> menuNameList = new ArrayList<>();
+        List<Integer> menuQuantityList = new ArrayList<>();
         Store store = orderDetailList.getFirst().getStore();
         for (OrderDetail orderDetail : orderDetailList) {
             totalPrice += orderDetail.getMenu().getPrice() * orderDetail.getQuantity();
+            orderDetailIdList.add(orderDetail.getOrderDetailId());
+            menuNameList.add(orderDetail.getMenu().getName());
+            menuQuantityList.add(orderDetail.getQuantity());
         }
         Order order = new Order(totalPrice, requests, 0, user, store);
         Order savedOrder = orderRepository.save(order);
 
-        for(OrderDetail orderDetail : orderDetailList){ //orderDetail 에 주문 넣어주기
+        for (OrderDetail orderDetail : orderDetailList) { //orderDetail 에 주문 넣어주기
             orderDetail.setOrder(savedOrder);
         }
-        return savedOrder;
+        return new OrderResponseDto(savedOrder, orderDetailIdList, menuNameList, menuQuantityList);
     }
 }
