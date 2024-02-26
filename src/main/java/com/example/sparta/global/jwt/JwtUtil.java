@@ -1,6 +1,7 @@
 package com.example.sparta.global.jwt;
 
 
+import com.example.sparta.domain.user.entity.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -26,6 +27,10 @@ public class JwtUtil {
 
     // Header Key 값
     public final String AUTHORIZATION_HEADER = "Authoriztion";
+
+
+    // 권한 사용할때 필요함
+    public static final String AUTHORIZATION_KEY = "auth";
 
     // 토큰 식별자 (값이 Bearer  으로 시작해야함)
     public final String BEARER_PREFIX = "Bearer ";
@@ -80,7 +85,7 @@ public class JwtUtil {
             //토큰이 정상으로 유효하면 true 반환
             return true;
 
-        // 각종 문제로 인해서 토큰이 유효하지 않으면 어떤 이유로 유효하지 않은지 log 를찍고 catch 후 false 리턴
+            // 각종 문제로 인해서 토큰이 유효하지 않으면 어떤 이유로 유효하지 않은지 log 를찍고 catch 후 false 리턴
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
@@ -102,7 +107,7 @@ public class JwtUtil {
 
 
     // 토큰을 새로 만들때
-    public String createToken (String username){
+    public String createToken (String username, UserRoleEnum role){
         Date date = new Date();
 
         // 토큰 만료시간 1시간
@@ -118,6 +123,7 @@ public class JwtUtil {
             .setIssuedAt(date)
             // 개인 키를 가지고 HS256 암호화 알고리즘으로 Header 와 Signature 생성
             .signWith(key,signatureAlgorithm)
+            .claim(AUTHORIZATION_KEY, role)
             .compact();
     }
 
