@@ -43,4 +43,12 @@ public class Order extends Timestamped {
     @JoinColumn(name = "store_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Store store;
+
+    public Order(Integer totalPrice, String requests, Integer orderStatus, User user, Store store) {
+        this.totalPrice = totalPrice;
+        this.requests = requests;
+        this.orderStatus = orderStatus;
+        this.user = user;
+        this.store = store;
+    }
 }
