@@ -6,7 +6,6 @@ import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.store.repository.StoreRepository;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.domain.user.repository.UserRepository;
-import com.example.sparta.global.impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
