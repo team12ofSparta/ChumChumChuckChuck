@@ -76,4 +76,17 @@ public class OrderDetailService {
             .menuIdList(menuIdList).menuNameList(menuNameList)
             .menuPriceList(menuPriceList).quantityList(quantityList).build();
     }
+
+    public void deleteOrderDetail(Long orderDetailsId, User user) {
+
+        OrderDetail orderDetail = orderDetailRepository.findById(orderDetailsId).orElseThrow(
+            () -> new NoSuchElementException("해당 상세 주문이 존재하지 않습니다.")
+        );
+
+        if(!orderDetail.getUser().getUserId().equals(user.getUserId())) {
+            throw new IllegalArgumentException("유저 정보가 일치하지 않습니다.");
+        }
+
+        orderDetailRepository.delete(orderDetail);
+    }
 }

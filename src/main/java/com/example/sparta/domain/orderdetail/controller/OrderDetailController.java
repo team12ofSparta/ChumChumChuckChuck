@@ -52,4 +52,13 @@ public class OrderDetailController {
             .body(ResponseDto.<GetOrderDetailResponseDto>builder().statusCode(HttpStatus.OK.value())
                 .message("현재 주문 상세 조회 완료").data(getOrderDetailResponseDto).build());
     }
+
+    @DeleteMapping("/orderDetails/{orderDetailsId}")
+    public ResponseEntity<ResponseDto<Void>> deleteOrderDetail(@PathVariable Long orderDetailsId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        orderDetailService.deleteOrderDetail(orderDetailsId, userDetails.getUser());
+
+        return ResponseEntity.noContent().build();
+    }
 }
