@@ -8,6 +8,7 @@ import com.example.sparta.domain.user.dto.UserPasswordUpdateResponseDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateResponseDto;
 import com.example.sparta.domain.user.entity.User;
+import com.example.sparta.domain.user.entity.UserRoleEnum;
 import com.example.sparta.domain.user.repository.UserRepository;
 import com.example.sparta.domain.user.dto.UserSignupRequestDto;
 import com.example.sparta.global.jwt.JwtUtil;
@@ -36,7 +37,8 @@ public class UserService {
             // 만약 DB에 동일한 Email 이 존재하면
             throw new IllegalArgumentException("이미 가입된 email 입니다");
         }
-        User user = new User(userSignupRequestDto.getName(),password,email,userSignupRequestDto.getAddress());
+        User user = new User(userSignupRequestDto.getName(),password,email,userSignupRequestDto.getAddress(),
+            UserRoleEnum.USER);
         // if문 안들어가고 잘 넘어오면 입력받아온 Name, password(인코딩한), email, Address 를 user 에 저장
 
         userRepository.save(user);
@@ -117,4 +119,6 @@ public class UserService {
             .build();
 
     }
+
+    // 카카오 회원 가입하기
 }

@@ -8,10 +8,13 @@ import com.example.sparta.domain.user.dto.UserPasswordUpdateResponseDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateResponseDto;
 import com.example.sparta.domain.user.dto.UserSignupRequestDto;
+import com.example.sparta.domain.user.service.KakaoUserService;
 import com.example.sparta.domain.user.service.UserService;
 import com.example.sparta.global.dto.ResponseDto;
 import com.example.sparta.global.impl.UserDetailsImpl;
 import com.example.sparta.global.jwt.JwtUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,6 +37,7 @@ public class UserController {
     private final UserService userService;
     //JwtUtil 주입받기
     private final JwtUtil jwtUtil;
+    private final KakaoUserService kakaoUserService;
 
 
     // 회원 가입 하기
@@ -105,6 +110,17 @@ public class UserController {
         );
     }
 
+
+    // 카카오 로그인
+    @GetMapping("/v1/users/kakao")
+    public String kakaoLogin(@RequestParam String code, HttpServletResponse httpServletResponse) throws JsonProcessingException {
+        String token = kakaoUserService.kakaoLogin(code);   // jwt 토큰을 쿠키에 넣어주는 작업 해서 response 에 넣어줌
+        Cookie cookie = new Cookie(jwtUtil.AUTHORIZATION_HEADER, token);
+        cookie.setPath("/");
+        httpServletResponse.addCookie(cookie);
+
+        return "redirect:/";
+    }
 
 
 

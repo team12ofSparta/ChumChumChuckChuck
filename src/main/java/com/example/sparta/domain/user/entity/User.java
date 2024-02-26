@@ -43,11 +43,22 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private String address;
 
-    public User(String name, String password, String email, String address) {
+    private Long kakaoId;
+
+    public User(String name, String password, String email, String address, UserRoleEnum role) {
         this.name = name;
         this.password = password;
         this.email = email;
         this.address = address;
+        this.role = role;
+    }
+    public User(String name, String password, String email, String address, UserRoleEnum role, Long kakaoId) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.address = address;
+        this.role = role;
+        this.kakaoId = kakaoId;
     }
 
     public void userUpdate(UserProfileUpdateRequestDto userProfileReworkRequestDto) {
@@ -65,5 +76,10 @@ public class User extends Timestamped {
         if (userPasswordUpdateRequestDto.getNewpassword() != null) {
             this.password = passwordEncoder.encode(userPasswordUpdateRequestDto.getNewpassword());
         }
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
     }
 }
