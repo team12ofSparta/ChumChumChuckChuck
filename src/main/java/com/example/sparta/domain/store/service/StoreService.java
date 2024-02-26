@@ -5,6 +5,8 @@ import com.example.sparta.domain.store.dto.StoreResponseDto;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.store.repository.StoreRepository;
 import com.example.sparta.domain.user.entity.User;
+import com.example.sparta.domain.user.repository.UserRepository;
+import com.example.sparta.global.impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,9 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class StoreService {
     private final StoreRepository storeRepository;
+    private final UserRepository userRepository;
 
-    public StoreResponseDto createStore(StoreRequestDto requestDto) {
-        //User user = userReposirty.findbyId.....
-        User user = new User();
+    public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
         Store store = new Store(requestDto,user);
         Store saveStore = storeRepository.save(store);
         return new StoreResponseDto(saveStore);
