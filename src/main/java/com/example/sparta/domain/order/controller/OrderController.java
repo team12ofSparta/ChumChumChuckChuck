@@ -1,6 +1,7 @@
 package com.example.sparta.domain.order.controller;
 
 import com.example.sparta.domain.order.dto.CreateOrderRequestDto;
+import com.example.sparta.domain.order.dto.ModifyOrderRequestDto;
 import com.example.sparta.domain.order.dto.OrderResponseDto;
 import com.example.sparta.domain.order.service.OrderService;
 import com.example.sparta.global.dto.ResponseDto;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -102,6 +104,30 @@ public class OrderController {
             .statusCode(HttpStatus.OK.value())
             .message("주문 삭제 성공")
             .data(null)
+            .build()
+        );
+    }
+
+    @PatchMapping("/{orderId}")
+    public ResponseEntity<ResponseDto<OrderResponseDto>> modifyOrderRequest(
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+        , @PathVariable Long orderId
+        , @RequestBody ModifyOrderRequestDto modifyOrderRequestDto) {
+        OrderResponseDto orderResponseDto;
+        try {
+            orderResponseDto = orderService.modifyOrderRequest(userDetails.getUser(),
+                orderId, modifyOrderRequestDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(ResponseDto.<OrderResponseDto>builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .message(e.getMessage())
+                .data(null)
+                .build());
+        }
+        return ResponseEntity.ok().body(ResponseDto.<OrderResponseDto>builder()
+            .statusCode(HttpStatus.OK.value())
+            .message("주문 요청사항 수정 성공")
+            .data(orderResponseDto)
             .build()
         );
     }
