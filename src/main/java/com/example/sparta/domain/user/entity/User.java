@@ -46,4 +46,5 @@ public class User extends Timestamped {
         this.email = email;
         this.address = address;
     }
+
 }
