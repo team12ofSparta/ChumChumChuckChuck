@@ -28,7 +28,7 @@ public class Order extends Timestamped {
     private Long orderId;
 
     @Column(nullable = false)
-    private Integer totalPrice;
+    private Long totalPrice;
 
     @Column
     private String requests;
@@ -44,7 +44,7 @@ public class Order extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Store store;
 
-    public Order(Integer totalPrice, String requests, Integer orderStatus, User user, Store store) {
+    public Order(Long totalPrice, String requests, Integer orderStatus, User user, Store store) {
         this.totalPrice = totalPrice;
         this.requests = requests;
         this.orderStatus = orderStatus;
