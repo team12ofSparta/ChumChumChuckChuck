@@ -9,6 +9,7 @@ import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,4 +43,37 @@ public class OrderService {
         }
         return new OrderResponseDto(savedOrder, orderDetailIdList, menuNameList, menuQuantityList);
     }
+
+    public OrderResponseDto getOrder(User user, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문번호입니다."));
+        return orderResponseDtoMaker(order);
+    }
+
+    public List<OrderResponseDto> getOrderList(User user) {
+        List<OrderResponseDto> orderResponseDtoList = new ArrayList<>();
+        List<Order> orderList = orderRepository.findByUser(user);
+        if (orderList.isEmpty()) {
+            throw new NoSuchElementException("주문내역이 존재하지 않습니다.");
+        }
+        for (Order order : orderList) {
+            orderResponseDtoList.add(orderResponseDtoMaker(order));
+        }
+        return orderResponseDtoList;
+    }
+
+    private OrderResponseDto orderResponseDtoMaker(Order order) {
+
+        List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
+        List<Long> orderDetailIdList = new ArrayList<>();
+        List<String> menuNameList = new ArrayList<>();
+        List<Integer> menuQuantityList = new ArrayList<>();
+        for (OrderDetail orderDetail : orderDetailList) {
+            orderDetailIdList.add(orderDetail.getOrderDetailId());
+            menuNameList.add(orderDetail.getMenu().getName());
+            menuQuantityList.add(orderDetail.getQuantity());
+        }
+        return new OrderResponseDto(order, orderDetailIdList, menuNameList, menuQuantityList);
+    }
+
 }
