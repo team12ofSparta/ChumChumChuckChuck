@@ -40,4 +40,16 @@ public class OrderDetailController {
                 .message("메뉴 담기 완료").data(orderDetailResponseDto).build()
         );
     }
+
+    @GetMapping("/orderDetails")
+    public ResponseEntity<ResponseDto<GetOrderDetailResponseDto>> getOrderDetail(
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        GetOrderDetailResponseDto getOrderDetailResponseDto = orderDetailService.getOrderDetail(
+            userDetails.getUser());
+
+        return ResponseEntity.ok()
+            .body(ResponseDto.<GetOrderDetailResponseDto>builder().statusCode(HttpStatus.OK.value())
+                .message("현재 주문 상세 조회 완료").data(getOrderDetailResponseDto).build());
+    }
 }
