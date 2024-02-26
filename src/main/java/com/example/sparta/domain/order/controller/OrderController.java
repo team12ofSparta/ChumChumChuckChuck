@@ -5,6 +5,8 @@ import com.example.sparta.domain.order.dto.OrderResponseDto;
 import com.example.sparta.domain.order.service.OrderService;
 import com.example.sparta.global.dto.ResponseDto;
 import com.example.sparta.global.impl.UserDetailsImpl;
+import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,5 +59,27 @@ public class OrderController {
             .data(orderResponseDto)
             .build()
         );
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseDto<List<OrderResponseDto>>> getOrderList(
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+      List<OrderResponseDto>  orderResponseDtoList;
+      try {
+          orderResponseDtoList = orderService.getOrderList(userDetails.getUser());
+      }catch (NoSuchElementException e){
+          return ResponseEntity.badRequest().body(ResponseDto.<List<OrderResponseDto>>builder()
+              .statusCode(HttpStatus.BAD_REQUEST.value())
+              .message(e.getMessage())
+              .data(null)
+              .build());
+      }
+      return ResponseEntity.ok().body(ResponseDto.<List<OrderResponseDto>>builder()
+              .statusCode(HttpStatus.OK.value())
+              .message("주문 목록 조회 성공")
+              .data(orderResponseDtoList)
+              .build()
+          );
     }
 }
