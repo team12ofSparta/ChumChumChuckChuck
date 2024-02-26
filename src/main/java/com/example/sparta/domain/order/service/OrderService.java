@@ -49,6 +49,7 @@ public class OrderService {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문번호입니다."));
         return orderResponseDtoMaker(order);
     }
+  
     public List<OrderResponseDto> getOrderList(User user) {
         List<OrderResponseDto> orderResponseDtoList = new ArrayList<>();
         List<Order> orderList = orderRepository.findByUser(user);
@@ -60,6 +61,7 @@ public class OrderService {
         }
         return orderResponseDtoList;
     }
+  
     private OrderResponseDto orderResponseDtoMaker(Order order){
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
         List<Long> orderDetailIdList = new ArrayList<>();
@@ -72,4 +74,5 @@ public class OrderService {
         }
         return new OrderResponseDto(order, orderDetailIdList, menuNameList, menuQuantityList);
     }
+ 
 }
