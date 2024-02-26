@@ -63,6 +63,7 @@ public class OrderService {
     }
 
     private OrderResponseDto orderResponseDtoMaker(Order order) {
+
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
         List<Long> orderDetailIdList = new ArrayList<>();
         List<String> menuNameList = new ArrayList<>();
@@ -74,4 +75,5 @@ public class OrderService {
         }
         return new OrderResponseDto(order, orderDetailIdList, menuNameList, menuQuantityList);
     }
+
 }
