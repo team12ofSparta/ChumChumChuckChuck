@@ -70,7 +70,7 @@ public class ControllerTest {
         this.mockUserSetup();
         StoreRequestDto requestDto= new StoreRequestDto();
         requestDto.setName("store name");
-        requestDto.setCategory("store catagory");
+        requestDto.setCategory("store category");
         requestDto.setAddress("store address");
         requestDto.setContent("store content");
         requestDto.setRating(4.4f);

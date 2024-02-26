@@ -41,22 +41,22 @@ public class StoreController {
                         .build());
     }
     @PutMapping("/{storeId}")
-    public ResponseEntity<?> EditStoreDetails(@PathVariable(name = "storeId") Long id,@RequestBody StoreRequestDto storeRequestDto){
+    public ResponseEntity<?> EditStoreDetails(@PathVariable(name = "storeId") Long id,@RequestBody StoreRequestDto storeRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(ResponseDto
                         .builder()
                         .statusCode(202)
-                        .data(storeService.editStore(id,storeRequestDto))
+                        .data(storeService.editStore(id,storeRequestDto,userDetails.getUser()))
                         .message("가게가 정보가 수정 되었습니다.")
                         .build());
     }
     @DeleteMapping("/{storeId}")
-    public ResponseEntity<?> DeleteStore(@PathVariable(name = "storeId") Long id){
+    public ResponseEntity<?> DeleteStore(@PathVariable(name = "storeId") Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                 .body(ResponseDto
                         .builder()
                         .statusCode(202)
-                        .data(storeService.deleteStore(id))
+                        .data(storeService.deleteStore(id,userDetails.getUser()))
                         .message("가게사 삭제 되었습니다.")
                         .build());
     }
