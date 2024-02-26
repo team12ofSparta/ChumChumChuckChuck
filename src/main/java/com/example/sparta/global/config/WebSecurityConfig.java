@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpEntity;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,7 +55,7 @@ public class WebSecurityConfig {
             sessionManagement.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS));
 
-        httpSecurity.authorizeHttpRequests((authorizeHttpRequests)->
+        httpSecurity.authorizeHttpRequests((authorizeHttpRequests) ->
             authorizeHttpRequests
                 // 접근 허용 설정하기
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
@@ -72,7 +69,8 @@ public class WebSecurityConfig {
         // httpSecurity.addFilterBefore(Filter,UsernamePasswordAuthenticationFilter.class)
         // 인증 처리하는 기본필터 UsernamePasswordAuthenticationFilter.class 대신에
         // 직접 만든 authorizationFilter() 필터를 등록하고 사용하겠다.
-        httpSecurity.addFilterBefore(authorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(authorizationFilter(),
+            UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
 
