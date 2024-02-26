@@ -20,7 +20,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "reviews")
 public class Review extends Timestamped {
@@ -51,5 +50,10 @@ public class Review extends Timestamped {
     public Review(ReviewRequestDto reviewRequestDto) {
         this.rating = reviewRequestDto.getRating();
         this.content = reviewRequestDto.getContent();
+    }
+
+    public void updateOne(Integer rating, String content) {
+        this.rating = rating;
+        this.content = content;
     }
 }
