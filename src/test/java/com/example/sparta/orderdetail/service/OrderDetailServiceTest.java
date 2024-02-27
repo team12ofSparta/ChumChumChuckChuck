@@ -1,11 +1,11 @@
 package com.example.sparta.orderdetail.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.BDDMockito.given;
 
 import com.example.sparta.domain.menu.entity.Menu;
 import com.example.sparta.domain.menu.repository.MenuRepository;
-import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.orderdetail.dto.GetOrderDetailResponseDto;
 import com.example.sparta.domain.orderdetail.dto.OrderDetailRequestDto;
 import com.example.sparta.domain.orderdetail.dto.OrderDetailResponseDto;
@@ -19,11 +19,9 @@ import com.example.sparta.domain.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -42,11 +40,11 @@ public class OrderDetailServiceTest {
     User user;
     Store store;
     Menu menu1, menu2;
-    Order order;
 
     @BeforeEach
     void setUp() {
-        orderDetailService = new OrderDetailService(orderDetailRepository, storeRepository, menuRepository);
+        orderDetailService = new OrderDetailService(orderDetailRepository, storeRepository,
+            menuRepository);
 
         user = new User("user123", "password123", "user@user.com", "서울");
         user.setUserId(1L);
@@ -79,7 +77,8 @@ public class OrderDetailServiceTest {
         OrderDetail orderDetail = new OrderDetail(1, user, store, null, menu1);
 
         // when
-        OrderDetailResponseDto responseDto = orderDetailService.addOrderDetail(new OrderDetailRequestDto(1), 1L, 1L, user);
+        OrderDetailResponseDto responseDto = orderDetailService.addOrderDetail(
+            new OrderDetailRequestDto(1), 1L, 1L, user);
 
         // then
         assertNotNull(responseDto);
@@ -102,7 +101,8 @@ public class OrderDetailServiceTest {
         // then
         assertNotNull(responseDto);
         assertEquals(orderDetailList.get(0).getStore().getName(), responseDto.getStoreName());
-        assertEquals(orderDetailList.get(0).getMenu().getName(), responseDto.getMenuNameList().get(0));
+        assertEquals(orderDetailList.get(0).getMenu().getName(),
+            responseDto.getMenuNameList().get(0));
     }
 
     @Test
@@ -131,7 +131,8 @@ public class OrderDetailServiceTest {
         Integer quantity = 5;
 
         // when
-        OrderDetailResponseDto responseDto = orderDetailService.updateOrderDetail(1L, quantity, user);
+        OrderDetailResponseDto responseDto = orderDetailService.updateOrderDetail(1L, quantity,
+            user);
 
         // then
         assertEquals(quantity, responseDto.getQuantity());
