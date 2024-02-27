@@ -62,7 +62,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/users/login").permitAll() // permitAll() : 접근 허가
                 .requestMatchers("/users/signup").permitAll()
                 //anyRequest() : 위 설정 이외 모두
-                .anyRequest().permitAll() // authenticated() : jwt 인증 필요함
+                .anyRequest().authenticated() // authenticated() : jwt 인증 필요함
         );
 
         // 필터 관리하기
