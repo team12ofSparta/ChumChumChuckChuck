@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -27,7 +28,6 @@ public class UserService {
 
 
     public void userSignup(UserSignupRequestDto userSignupRequestDto) {
-        String password = passwordEncoder.encode(userSignupRequestDto.getPassword());
         String email = userSignupRequestDto.getEmail();
 
         // 이미 가입한 유저인지 체크하기
@@ -35,9 +35,7 @@ public class UserService {
             // 만약 DB에 동일한 Email 이 존재하면
             throw new IllegalArgumentException("이미 가입된 email 입니다");
         }
-        User user = new User(userSignupRequestDto.getName(), password, email,
-            userSignupRequestDto.getAddress(),
-            UserRoleEnum.USER);
+        User user = new User(userSignupRequestDto,passwordEncoder);
         // if문 안들어가고 잘 넘어오면 입력받아온 Name, password(인코딩한), email, Address 를 user 에 저장
 
         userRepository.save(user);
@@ -66,6 +64,7 @@ public class UserService {
         httpServletResponse.setHeader("Authorization", null);
     }
 
+    @Transactional
     public void userProfileUpdate(UserProfileUpdateRequestDto userProfileUpdateRequestDto,
         String jwtToken) {
        String email = jwtUtil.getUserInfoFromToken(jwtToken).getSubject();
@@ -73,10 +72,9 @@ public class UserService {
             .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
         userUp.userUpdate(userProfileUpdateRequestDto);
-        userRepository.save(userUp);
-
     }
 
+    @Transactional
     public void userPasswordUpdate(UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
         String jwtToken) {
         String email = jwtUtil.getUserInfoFromToken(jwtToken).getSubject();
@@ -101,7 +99,6 @@ public class UserService {
         }
 
         userUp.userPasswordUpdate(userPasswordUpdateRequestDto, passwordEncoder);
-        userRepository.save(userUp);
 
     }
 }

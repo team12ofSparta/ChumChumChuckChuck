@@ -2,6 +2,7 @@ package com.example.sparta.domain.user.entity;
 
 import com.example.sparta.domain.user.dto.UserPasswordUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateRequestDto;
+import com.example.sparta.domain.user.dto.UserSignupRequestDto;
 import com.example.sparta.global.entity.Timestamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,12 +46,12 @@ public class User extends Timestamped {
 
     private Long kakaoId;
 
-    public User(String name, String password, String email, String address, UserRoleEnum role) {
-        this.name = name;
-        this.password = password;
-        this.email = email;
-        this.address = address;
-        this.role = role;
+    public User(UserSignupRequestDto userSignupRequestDto,PasswordEncoder passwordEncoder) {
+        this.name = userSignupRequestDto.getName();
+        this.password = passwordEncoder.encode(userSignupRequestDto.getPassword());
+        this.email = userSignupRequestDto.getEmail();
+        this.address = userSignupRequestDto.getAddress();
+        this.role =  UserRoleEnum.USER;
     }
     public User(String name, String password, String email, String address, UserRoleEnum role, Long kakaoId) {
         this.name = name;
