@@ -54,7 +54,7 @@ public class StoreController {
                 .body(ExceptionDto
                     .builder()
                     .statusCode(500)
-                    .message("모든 가게 를 조회 오류 발생.")
+                    .message("모든 가게 조회 오류 발생.")
                     .build());
         }
     }
@@ -72,17 +72,17 @@ public class StoreController {
                 .body(ExceptionDto
                     .builder()
                     .statusCode(500)
-                    .message("가게 의 정보가 수정 오류 발생.")
+                    .message("가게 정보 수정 오류 발생.")
                     .build());
         }
     }
     @DeleteMapping("/{storeId}")
     public ResponseEntity<?> deleteStore(@PathVariable(name = "storeId") Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
         try {
-            return ResponseEntity.status(HttpStatus.CREATED)
+            return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto
                     .builder()
-                    .statusCode(201)
+                    .statusCode(200)
                     .data(storeService.deleteStore(id,userDetails.getUser()))
                     .build());
         }catch (Exception e){
@@ -111,7 +111,7 @@ public class StoreController {
                 .body(ExceptionDto
                     .builder()
                     .statusCode(500)
-                    .message("가게 id : ."+id+" 를 가져올수 없어요")
+                    .message("가게 id : ."+id+" 를 가져올수 없습니다")
                     .build());
         }
 
@@ -194,7 +194,7 @@ public class StoreController {
                 .body(ExceptionDto
                     .builder()
                     .statusCode(500)
-                    .message("가계 의 영업 시간 이 등록 에러.")
+                    .message("영업시간 등록 에러.")
                     .build());
         }
 
@@ -209,7 +209,6 @@ public class StoreController {
                     .builder()
                     .statusCode(200)
                     .data(storeService.forceStatus(id,code,userDetails.getUser().getRole()))
-                    //.message("가계 status 강제 변경")
                     .build());
         }
         catch (Exception e){
@@ -217,7 +216,7 @@ public class StoreController {
                 .body(ExceptionDto
                     .builder()
                     .statusCode(500)
-                    .message("가계 status 강제 변경 에러")
+                    .message(" status 강제 변경 에러")
                     .build());
         }
 

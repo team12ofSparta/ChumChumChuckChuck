@@ -6,7 +6,6 @@ import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.store.entity.StoreStatus;
 import com.example.sparta.domain.store.repository.StoreRepository;
 import com.example.sparta.domain.user.entity.User;
-import com.example.sparta.domain.user.entity.UserRoleEnum;
 import com.example.sparta.domain.user.repository.UserRepository;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
