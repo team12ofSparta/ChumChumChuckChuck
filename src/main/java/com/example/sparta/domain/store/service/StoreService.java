@@ -118,7 +118,7 @@ public class StoreService {
                 throw new IllegalArgumentException("영업 시간 변경 오류 발생");
             }
         }
-        return dto;
+        return new OpeningHoursDto(store);
     }
 
     // Admin tools

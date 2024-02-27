@@ -170,7 +170,7 @@ public class ControllerTest {
 
     //  가계 주인 권한
     @Test
-    @DisplayName("Open the Store!")
+    @DisplayName("Open/close the Store!")
     void test7() throws Exception {
         //given
         this.mockUserSetup();
@@ -182,8 +182,20 @@ public class ControllerTest {
             .andDo(print());
     }
     @Test
+    @DisplayName("close store")
+    void test8() throws Exception{
+        //given
+        this.mockUserSetup();
+        // when - then
+        this.mvc.perform(get("/stores/1/close")
+                .principal(mockPrincipal)
+            )
+            .andExpect(status().is(201))
+            .andDo(print());
+    }
+    @Test
     @DisplayName("Store 영업시간 생성/수정")
-    void test8() throws Exception {
+    void test9() throws Exception {
         //given
         this.mockUserSetup();
         OpeningHoursDto dto = new OpeningHoursDto();
@@ -201,7 +213,18 @@ public class ControllerTest {
             .andDo(print());
     }
     // 관리자 권한
-
+    @Test
+    @DisplayName("ADMINISTRATOR FORCE STATUS")
+    void test10() throws Exception{
+        //given
+        this.mockUserSetup();
+        // when - then
+        this.mvc.perform(get("/stores/1/status/force/4")
+                .principal(mockPrincipal)
+            )
+            .andExpect(status().is(200))
+            .andDo(print());
+    }
 
 
 }

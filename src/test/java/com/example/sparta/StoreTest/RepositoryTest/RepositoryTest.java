@@ -1,4 +1,4 @@
-package com.example.sparta.StoreTest.RepositoryTest;
+package com.example.sparta.storeTest.repositoryTest;
 
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.entity.Store;
@@ -65,7 +65,5 @@ public class RepositoryTest {
         catch (NoSuchElementException e){
             fail();
         }
-
-
     }
 }

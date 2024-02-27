@@ -1,5 +1,6 @@
-package com.example.sparta.StoreTest.ServiceTest;
+package com.example.sparta.storeTest.serviceTest;
 
+import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.dto.StoreResponseDto;
 import com.example.sparta.domain.store.entity.Store;
@@ -7,6 +8,8 @@ import com.example.sparta.domain.store.repository.StoreRepository;
 import com.example.sparta.domain.store.service.StoreService;
 import com.example.sparta.domain.user.entity.User;
 
+import com.example.sparta.domain.user.entity.UserRoleEnum;
+import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -148,33 +151,6 @@ public class ServiceTest {
         //then
         assertEquals(1L,id);
     }
-    @Test
-    @DisplayName("스토어 삭제 하기")
-    void test5(){
-        //given
-
-        StoreRequestDto requestDto = new StoreRequestDto();
-        requestDto.setName("new name");
-        requestDto.setCategory("Chicken");
-        // 유저
-        User user = new User();
-        user.setUserId(1L);
-        user.setAddress("로마");
-        user.setEmail("sparta@iscool.com");
-        user.setName("스탄이");
-
-        //service
-        StoreService storeService = new StoreService(mockStoreRepository);
-
-        //score
-        Store score = new Store(requestDto,user);
-
-        // when
-        given(mockStoreRepository.findById(1L)).willReturn(Optional.of(score));
-        Long id = storeService.deleteStore(1L,user);
-        //then
-        assertEquals(1L,id);
-    }
 
     @Test
     @DisplayName("스토어 선택 검색 하기")
@@ -217,7 +193,6 @@ public class ServiceTest {
         requestDto.setDibsCount(100);
         requestDto.setRating(5.5f);
 
-
         // 유저
         User user = new User();
         user.setUserId(1L);
@@ -243,4 +218,97 @@ public class ServiceTest {
         //then
         assertEquals(storeResponseDtoLs.get(1).getName(),ls.get(1).getName());
     }
+
+    @Test
+    @DisplayName("영업 시작 + 영업 종료 하기")
+    void test8(){
+        //given
+
+        StoreRequestDto requestDto = new StoreRequestDto();
+        requestDto.setName("new name");
+        requestDto.setCategory("Chicken");
+        // 유저
+        User user = new User();
+        user.setUserId(1L);
+        user.setAddress("로마");
+        user.setEmail("sparta@iscool.com");
+        user.setName("스탄이");
+
+        //service
+        StoreService storeService = new StoreService(mockStoreRepository);
+
+        //score
+        Store score = new Store(requestDto,user);
+
+        // when
+        given(mockStoreRepository.findById(1L)).willReturn(Optional.of(score));
+        Long id = storeService.openStore(1L,user);
+        Long id2 = storeService.closeStore(1L,user);
+        //then
+        assertEquals(1L,id);
+        assertEquals(1L,id2);
+    }
+
+    @Test
+    @DisplayName("영업 시간 추가")
+    void test9(){
+        //given
+
+        StoreRequestDto requestDto = new StoreRequestDto();
+        requestDto.setName("new name");
+        requestDto.setCategory("Chicken");
+        // 유저
+        User user = new User();
+        user.setUserId(1L);
+        user.setAddress("로마");
+        user.setEmail("sparta@iscool.com");
+        user.setName("스탄이");
+
+        OpeningHoursDto dto = new OpeningHoursDto();
+        dto.setOpening(LocalTime.now());
+        dto.setClosing(LocalTime.MIDNIGHT);
+        //service
+        StoreService storeService = new StoreService(mockStoreRepository);
+
+        //score
+        Store score = new Store(requestDto,user);
+
+        // when
+        given(mockStoreRepository.findById(1L)).willReturn(Optional.of(score));
+        OpeningHoursDto ans = storeService.updateOpeningHours(1L,dto,user);
+
+        //then
+        assertEquals(LocalTime.MIDNIGHT,ans.getClosing());
+    }
+    @Test
+    @DisplayName("관리자 권한으로 가게 강제 관리")
+    void test10(){
+        //given
+
+        StoreRequestDto requestDto = new StoreRequestDto();
+        requestDto.setName("new name");
+        requestDto.setCategory("Chicken");
+        // 유저
+        User user = new User();
+        user.setUserId(1L);
+        user.setRole(UserRoleEnum.ADMIN);
+
+        OpeningHoursDto dto = new OpeningHoursDto();
+        dto.setOpening(LocalTime.now());
+        dto.setClosing(LocalTime.MIDNIGHT);
+        //service
+        StoreService storeService = new StoreService(mockStoreRepository);
+
+        //score
+        Store store = new Store(requestDto,user);
+
+        // when
+        given(mockStoreRepository.findById(1L)).willReturn(Optional.of(store));
+        StoreResponseDto ans = storeService.forceStatus(1L,1,user.getRole());
+
+        //then
+        assertEquals(store.getName(),ans.getName());
+    }
 }
+
+
