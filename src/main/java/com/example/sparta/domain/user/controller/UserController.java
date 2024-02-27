@@ -45,7 +45,6 @@ public class UserController {
     @PostMapping("/users/signup")
     public ResponseEntity<ResponseDto<Void>> usersSignup(
         @Valid @RequestBody UserSignupRequestDto userSignupRequestDto){
-        System.out.println("시작");
         userService.userSignup(userSignupRequestDto);
         return ResponseEntity.status(201).body(ResponseDto.
             <Void>builder()
