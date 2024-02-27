@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +26,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
@@ -41,6 +43,7 @@ public class UserController {
 
     // 회원 가입 하기
     @PostMapping("/signup")
+    @ResponseBody
     public ResponseEntity<ResponseDto<Void>> usersSignup(
         @Valid @RequestBody UserSignupRequestDto userSignupRequestDto) {
         userService.userSignup(userSignupRequestDto);
@@ -55,6 +58,7 @@ public class UserController {
 
     // 로그인 하기
     @PostMapping("/login")
+    @ResponseBody
     public ResponseEntity<ResponseDto<Void>> userLogin(
         @RequestBody UserLoginRequestDto userLoginRequestDto,
         HttpServletResponse httpServletResponse) {
@@ -70,6 +74,7 @@ public class UserController {
 
     //로그아웃 하기
     @GetMapping("/logout")
+    @ResponseBody
     public ResponseEntity<ResponseDto<Void>> userLogout(
         HttpServletResponse httpServletResponse
     ) {
@@ -84,6 +89,7 @@ public class UserController {
 
     //유저 정보 수정하기 (이름, 주소)
     @PatchMapping
+    @ResponseBody
     public ResponseEntity<ResponseDto<Void>> userProfileUpdate(
         @RequestBody UserProfileUpdateRequestDto userProfileUpdateRequestDto,
         @RequestHeader("authorization") String jwtToken
@@ -99,11 +105,13 @@ public class UserController {
 
     //유저 정보 수정하기 (비밀번호)
     @PatchMapping("/password")
+    @ResponseBody
     public ResponseEntity<ResponseDto<Void>> userPasswordUpdate(
         @RequestBody UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
-        @RequestHeader("authorization") String jwtToken
+        @RequestHeader("authorization") String jwtToken,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        userService.userPasswordUpdate(userPasswordUpdateRequestDto, jwtToken);
+        userService.userPasswordUpdate(userPasswordUpdateRequestDto, jwtToken,userDetails.getUser());
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .message("회원정보 수정 성공")
