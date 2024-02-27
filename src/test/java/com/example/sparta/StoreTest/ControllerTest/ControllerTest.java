@@ -2,6 +2,7 @@ package com.example.sparta.storeTest.controllerTest;
 
 
 import com.example.sparta.domain.store.controller.StoreController;
+import com.example.sparta.domain.store.dto.CreateStoreRequestDto;
 import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.service.StoreService;
@@ -67,18 +68,15 @@ public class ControllerTest {
     }
     //
     @Test
-    @DisplayName("Store post")
+    @DisplayName("Store Create")
     void test1() throws Exception {
         //given
         this.mockUserSetup();
-        StoreRequestDto requestDto= new StoreRequestDto();
+        CreateStoreRequestDto requestDto= new CreateStoreRequestDto();
         requestDto.setName("store name");
         requestDto.setCategory("store category");
         requestDto.setAddress("store address");
         requestDto.setContent("store content");
-        requestDto.setRating(4.4f);
-        requestDto.setDibsCount(4);
-        requestDto.setReviewCount(4);
         requestDto.setDeliveryAddress("delivery address");
 
         String postform  = objectMapper.writeValueAsString(requestDto);

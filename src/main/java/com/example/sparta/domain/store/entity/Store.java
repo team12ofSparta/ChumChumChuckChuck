@@ -96,12 +96,12 @@ public class Store extends Timestamped {
     }
     @Transactional
     public void openStore(boolean b){
-        status = b?StoreStatus.RUNNING:StoreStatus.CLOSED;
+        this.status = b?StoreStatus.RUNNING:StoreStatus.CLOSED;
     }
     @Transactional
     public void setOpeningHours(OpeningHoursDto dto){
-        openingTime = dto.getOpening();
-        closingTime = dto.getClosing();
+        this.openingTime = dto.getOpening();
+        this.closingTime = dto.getClosing();
     }
     // 관리자 권한
     @Transactional

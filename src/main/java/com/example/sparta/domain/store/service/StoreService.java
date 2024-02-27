@@ -85,12 +85,12 @@ public class StoreService {
     public Long openStore(Long id, User user) {
         Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
         if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
-            try {
-                store.openStore(true);
-            }
-            catch (Exception e) {
-                throw new IllegalArgumentException("가계 영업 시작 하는데 오류 발생");
-            }
+                try {
+                    store.openStore(true);
+                }
+                catch (Exception e) {
+                    throw new IllegalArgumentException("가계 영업 시작 하는데 오류 발생");
+                }
         }
         return id;
     }
