@@ -82,6 +82,7 @@ public class StoreService {
      *     Opening Store
      *
      */
+    @Transactional
     public Long openStore(Long id, User user) {
         Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
         if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
@@ -94,6 +95,7 @@ public class StoreService {
         }
         return id;
     }
+    @Transactional
     public Long closeStore(Long id, User user) {
         Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
         if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
@@ -123,6 +125,7 @@ public class StoreService {
     }
 
     // Admin tools
+    @Transactional
     public StoreResponseDto forceStatus(Long id, int code, UserRoleEnum role) {
         if(!role.equals(UserRoleEnum.ADMIN))
             throw new IllegalArgumentException("해당 권한이 없습니다");
