@@ -119,4 +119,48 @@ class OrderControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("주문 삭제")
+    @WithMockUser
+    class deleteOrder{
+        @Test
+        @DisplayName("주문 삭제 - 성공")
+        void deleteOrder_success() throws Exception{
+            //given
+            Order order = new Order();
+            Store store = new Store();
+
+            order.setUser(testUser);
+            order.setStore(store);
+
+            Long orderId = 1L;
+            given(orderService.deleteOrder(any(User.class), any(Long.class))).willReturn(orderId);
+            //when
+            ResultActions action = mockMvc.perform(
+                delete("/orders/1")
+                    .accept(MediaType.APPLICATION_JSON)
+            );
+            //then
+            action.andDo(print()).andExpect(status().isOk());
+        }
+        @Test
+        @DisplayName("주문 삭제 - 실패")
+        void deleteOrder_fail() throws Exception{
+            //given
+            Order order = new Order();
+            Store store = new Store();
+
+            order.setUser(testUser);
+            order.setStore(store);
+
+            given(orderService.deleteOrder(any(User.class), any(Long.class))).willThrow(new IllegalArgumentException());
+            //when
+            ResultActions action = mockMvc.perform(
+                delete("/orders/1")
+                    .accept(MediaType.APPLICATION_JSON)
+            );
+            //then
+            action.andDo(print()).andExpect(status().isBadRequest());
+        }
+    }
 }
