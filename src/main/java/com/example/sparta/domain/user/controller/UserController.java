@@ -18,6 +18,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping
+@RequestMapping("")
 @RequiredArgsConstructor
 public class UserController {
     //Service 주입받기
@@ -41,9 +42,10 @@ public class UserController {
 
 
     // 회원 가입 하기
-    @PostMapping("/v1/users/signup")
+    @PostMapping("/users/signup")
     public ResponseEntity<ResponseDto<Void>> usersSignup(
         @Valid @RequestBody UserSignupRequestDto userSignupRequestDto){
+        System.out.println("시작");
         userService.userSignup(userSignupRequestDto);
         return ResponseEntity.status(201).body(ResponseDto.
             <Void>builder()
@@ -52,10 +54,10 @@ public class UserController {
             .data(null)
             .build()
         );
-    }
+ }
 
     // 로그인 하기
-    @PostMapping("/v1/users/login")
+    @PostMapping("/users/login")
     public ResponseEntity<ResponseDto<UserLoginResponseDto>> userLogin(
         @RequestBody UserLoginRequestDto userLoginRequestDto){
         userService.userLogin(userLoginRequestDto);
@@ -69,7 +71,7 @@ public class UserController {
 
 
     //로그아웃 하기
-    @GetMapping("/v1/users/logout")
+    @GetMapping("/users/logout")
     public ResponseEntity<ResponseDto<Void>> userLogout(
         HttpServletResponse httpServletResponse
     ){
@@ -83,7 +85,7 @@ public class UserController {
     }
 
     //유저 정보 수정하기 (이름, 주소)
-    @PatchMapping("/v1/users")
+    @PatchMapping("/users")
     public ResponseEntity<ResponseDto<UserProfileUpdateResponseDto>> userProfileUpdate(
         @RequestBody UserProfileUpdateRequestDto userProfileUpdateRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails
     ){
@@ -97,7 +99,7 @@ public class UserController {
     }
 
     //유저 정보 수정하기 (비밀번호)
-    @PatchMapping("/v1/users/password")
+    @PatchMapping("/users/password")
     public ResponseEntity<ResponseDto<UserPasswordUpdateResponseDto>> userPasswordUpdate(
         @RequestBody UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails
     ){
@@ -112,7 +114,7 @@ public class UserController {
 
 
     // 카카오 로그인
-    @GetMapping("/v1/users/kakao")
+    @GetMapping("/users/kakao")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse httpServletResponse) throws JsonProcessingException {
         String token = kakaoUserService.kakaoLogin(code);   // jwt 토큰을 쿠키에 넣어주는 작업 해서 response 에 넣어줌
         Cookie cookie = new Cookie(jwtUtil.AUTHORIZATION_HEADER, token);
