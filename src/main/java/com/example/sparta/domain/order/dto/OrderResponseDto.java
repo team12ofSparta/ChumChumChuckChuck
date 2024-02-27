@@ -2,6 +2,7 @@ package com.example.sparta.domain.order.dto;
 
 import com.example.sparta.domain.order.entity.Order;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
