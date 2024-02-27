@@ -1,11 +1,14 @@
 package com.example.sparta.domain.store.service;
 
+import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.dto.StoreResponseDto;
+import com.example.sparta.domain.store.entity.OpeningHours;
 import com.example.sparta.domain.store.entity.Store;
+import com.example.sparta.domain.store.repository.OpeningHoursRepository;
 import com.example.sparta.domain.store.repository.StoreRepository;
 import com.example.sparta.domain.user.entity.User;
-import com.example.sparta.domain.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +21,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class StoreService {
     private final StoreRepository storeRepository;
-    private final UserRepository userRepository;
+    private final OpeningHoursRepository storeOpeningHoursRepository;
 
     public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
         Store store = new Store(requestDto,user);
@@ -76,13 +79,53 @@ public class StoreService {
     }
 
     /*
-    *  Finding the User.
-    *
-    */
+     *
+     *     Opening Store
+     *
+     */
+    public Long openStore(Long id, User user) {
+        Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
+        if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
+            try {
+                store.openStore();
+            }
+            catch (Exception e) {
+                throw new IllegalArgumentException("가계 오픈 하는데 오류 발생");
+            }
+        }
+        return id;
+    }
 
-//    private User findUserById(long id){
-//        return userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("해당 유저를 찾을수 없어요"));
-//    }
+    public OpeningHoursDto createOpeningHours(Long id, OpeningHoursDto dto, User user) {
+        Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
+        if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
+            try {
+                OpeningHours storeOpeningHours = new OpeningHours(dto,store);
+                storeOpeningHoursRepository.save(storeOpeningHours);
+            }
+            catch (Exception e) {
+                throw new IllegalArgumentException("영업 시간 생성 오류 발생");
+            }
+        }
+        return dto;
+    }
+
+    @Transactional
+    public OpeningHoursDto updateOpeningHours(Long id, OpeningHoursDto dto, User user) {
+        Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
+        if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
+            try {
+                OpeningHours openingHourssave = storeOpeningHoursRepository.findStoreOpeningHoursByStore(store).orElseThrow(()-> new NoSuchElementException("해당 가계에 "));
+                openingHourssave.update(dto);
+            }
+            catch (Exception e) {
+                throw new IllegalArgumentException("영업 시간 변경 오류 발생");
+            }
+        }
+        return dto;
+    }
+
+    // closing
     private boolean checkingUserAccessPermission(long userId,long storeId ){
         if(userId==storeId){
             return true;

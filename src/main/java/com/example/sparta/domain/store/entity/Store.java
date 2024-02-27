@@ -22,7 +22,7 @@ public class Store extends Timestamped {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "user_id")
     private User owner;
 
     @Column(nullable = false)
@@ -46,6 +46,9 @@ public class Store extends Timestamped {
     @Column
     private String deliveryAddress;
 
+    @Column
+    private StoreStatus status;
+
     public Store(StoreRequestDto requestDto,User user){
         name = requestDto.getName();
         owner = user;
@@ -56,6 +59,7 @@ public class Store extends Timestamped {
         dibsCount = requestDto.getDibsCount();
         reviewCount = requestDto.getReviewCount();
         deliveryAddress = requestDto.getDeliveryAddress();
+        status = StoreStatus.PREPARING;
     }
     @Transactional
     public void update(StoreRequestDto requestDto) {
@@ -67,5 +71,20 @@ public class Store extends Timestamped {
         dibsCount = requestDto.getDibsCount();
         reviewCount = requestDto.getReviewCount();
         deliveryAddress = requestDto.getDeliveryAddress();
+    }
+    @Transactional
+    public void openStore(){
+        status = StoreStatus.RUNNING;
+    }
+    @Transactional
+    public void updateStatus(int input){
+        switch (input) {
+            case 1 -> this.status = StoreStatus.PREPARING;
+            case 2 -> this.status = StoreStatus.RUNNING;
+            case 3 -> this.status = StoreStatus.CLOSED;
+            case 4 -> this.status = StoreStatus.TEMPORARY_BANDED;
+            case 5 -> this.status = StoreStatus.PERMANENT_BANNED;
+            default -> throw new IllegalArgumentException("잘못된 입력 코드 store updateStatus() 1~5 까지만 가능");
+        }
     }
 }
