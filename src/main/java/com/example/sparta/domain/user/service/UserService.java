@@ -67,8 +67,9 @@ public class UserService {
     }
 
     public void userProfileUpdate(UserProfileUpdateRequestDto userProfileUpdateRequestDto,
-        User user) {
-        User userUp = userRepository.findByEmail(user.getEmail())
+        String jwtToken) {
+       String email = jwtUtil.getUserInfoFromToken(jwtToken).getSubject();
+        User userUp = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
 
         userUp.userUpdate(userProfileUpdateRequestDto);
@@ -77,14 +78,16 @@ public class UserService {
     }
 
     public void userPasswordUpdate(UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
-        User user) {
-        User userUp = userRepository.findByEmail(user.getEmail())
+        String jwtToken) {
+        String email = jwtUtil.getUserInfoFromToken(jwtToken).getSubject();
+        String password = (String) jwtUtil.getUserInfoFromToken(jwtToken).get("password");
+        User userUp = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
         if (userPasswordUpdateRequestDto.getPassword() == null) {
             throw new IllegalArgumentException("현재 비밀번호를 입력해 주세요");
         }
         if (!passwordEncoder.matches(userPasswordUpdateRequestDto.getPassword(),
-            user.getPassword())) {
+            password)) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
         }
         if (userPasswordUpdateRequestDto.getNewpassword() == null) {

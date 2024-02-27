@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,9 +86,9 @@ public class UserController {
     @PatchMapping
     public ResponseEntity<ResponseDto<Void>> userProfileUpdate(
         @RequestBody UserProfileUpdateRequestDto userProfileUpdateRequestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
+        @RequestHeader("authorization") String jwtToken
     ) {
-        userService.userProfileUpdate(userProfileUpdateRequestDto, userDetails.getUser());
+        userService.userProfileUpdate(userProfileUpdateRequestDto, jwtToken);
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .message("회원정보 수정 성공")
@@ -100,9 +101,9 @@ public class UserController {
     @PatchMapping("/password")
     public ResponseEntity<ResponseDto<Void>> userPasswordUpdate(
         @RequestBody UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
+        @RequestHeader("authorization") String jwtToken
     ) {
-        userService.userPasswordUpdate(userPasswordUpdateRequestDto, userDetails.getUser());
+        userService.userPasswordUpdate(userPasswordUpdateRequestDto, jwtToken);
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .message("회원정보 수정 성공")
