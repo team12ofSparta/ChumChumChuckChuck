@@ -41,20 +41,20 @@ public class StoreController {
     }
     @PutMapping("/{storeId}")
     public ResponseEntity<?> editStoreDetails(@PathVariable(name = "storeId") Long id,@RequestBody StoreRequestDto storeRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto
                         .builder()
-                        .statusCode(202)
+                        .statusCode(201)
                         .data(storeService.editStore(id,storeRequestDto,userDetails.getUser()))
                         .message("가게 의 정보가 수정 되었습니다.")
                         .build());
     }
     @DeleteMapping("/{storeId}")
     public ResponseEntity<?> deleteStore(@PathVariable(name = "storeId") Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto
                         .builder()
-                        .statusCode(202)
+                        .statusCode(201)
                         .data(storeService.deleteStore(id,userDetails.getUser()))
                         .message("가게 가 삭제 되었습니다.")
                         .build());
@@ -81,39 +81,47 @@ public class StoreController {
                         .build());
     }
     // 가계 주인 기능
-    @GetMapping("/open/{storeId}")
+    @GetMapping("/{storeId}/open")
     public ResponseEntity<?> openStore(@PathVariable(name = "storeId") Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-            .body(ResponseDto
-                .builder()
-                .statusCode(202)
-                .data(storeService.openStore(id,userDetails.getUser()))
-                .message("가계 오픈 성공")
-                .build());
-    }
-
-    @PostMapping("/open/{storeId}")
-    public ResponseEntity<?> createStoreOpeningHours(@PathVariable(name = "storeId")Long id,@RequestBody OpeningHoursDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ResponseDto
                 .builder()
                 .statusCode(201)
-                .data(storeService.createOpeningHours(id,requestDto,userDetails.getUser()))
-                .message("가계 의 영업 시간 이 등록되었습니다.")
+                .data(storeService.openStore(id,userDetails.getUser()))
+                .message("가계 운영 시작")
                 .build());
     }
-    @PutMapping("/open/{storeId}")
+    @GetMapping("/{storeId}/close")
+    public ResponseEntity<?> closeStore(@PathVariable(name = "storeId") Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ResponseDto
+                .builder()
+                .statusCode(201)
+                .data(storeService.closeStore(id,userDetails.getUser()))
+                .message("가계 운영 시작")
+                .build());
+    }
+
+    @PatchMapping("/openinghours/{storeId}")
     public ResponseEntity<?> updateStoreOpeningHours(@PathVariable(name = "storeId")Long id,@RequestBody OpeningHoursDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ResponseDto
                 .builder()
                 .statusCode(201)
                 .data(storeService.updateOpeningHours(id,requestDto,userDetails.getUser()))
-                .message("가계 의 영업 시간 이 변경 되었습니다.")
+                .message("가계 의 영업 시간 이 등록 되었습니다.")
                 .build());
     }
 
     //운영자 용 기능
-
-
+    @GetMapping("/{storeId}/status/force/{code}")
+    public ResponseEntity<?> forceChangeStoreStatus(@PathVariable(name = "storeId")Long id,@PathVariable(name = "code") int code,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ResponseDto
+                .builder()
+                .statusCode(200)
+                .data(storeService.forceStatus(id,code,userDetails.getUser().getRole()))
+                .message("가계 status 강제 변경")
+                .build());
+    }
 }

@@ -1,10 +1,12 @@
 package com.example.sparta.domain.store.entity;
 
+import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.entity.Timestamped;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
+import java.time.LocalTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -49,6 +51,11 @@ public class Store extends Timestamped {
     @Column
     private StoreStatus status;
 
+    @Column
+    private LocalTime openingTime;
+    @Column
+    private LocalTime closingTime;
+
     public Store(StoreRequestDto requestDto,User user){
         name = requestDto.getName();
         owner = user;
@@ -59,6 +66,7 @@ public class Store extends Timestamped {
         dibsCount = requestDto.getDibsCount();
         reviewCount = requestDto.getReviewCount();
         deliveryAddress = requestDto.getDeliveryAddress();
+
         status = StoreStatus.PREPARING;
     }
     @Transactional
@@ -73,9 +81,15 @@ public class Store extends Timestamped {
         deliveryAddress = requestDto.getDeliveryAddress();
     }
     @Transactional
-    public void openStore(){
-        status = StoreStatus.RUNNING;
+    public void openStore(boolean b){
+        status = b?StoreStatus.RUNNING:StoreStatus.CLOSED;
     }
+    @Transactional
+    public void setOpeningHours(OpeningHoursDto dto){
+        openingTime = dto.getOpening();
+        closingTime = dto.getClosing();
+    }
+    // 관리자 권한
     @Transactional
     public void updateStatus(int input){
         switch (input) {
@@ -87,4 +101,5 @@ public class Store extends Timestamped {
             default -> throw new IllegalArgumentException("잘못된 입력 코드 store updateStatus() 1~5 까지만 가능");
         }
     }
+
 }

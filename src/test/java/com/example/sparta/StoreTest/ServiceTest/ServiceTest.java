@@ -3,7 +3,6 @@ package com.example.sparta.StoreTest.ServiceTest;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.dto.StoreResponseDto;
 import com.example.sparta.domain.store.entity.Store;
-import com.example.sparta.domain.store.repository.OpeningHoursRepository;
 import com.example.sparta.domain.store.repository.StoreRepository;
 import com.example.sparta.domain.store.service.StoreService;
 import com.example.sparta.domain.user.entity.User;
@@ -27,8 +26,6 @@ import static org.mockito.BDDMockito.given;
 public class ServiceTest {
     @Mock
     StoreRepository mockStoreRepository;
-    @Mock
-    OpeningHoursRepository storeOpeningHourRepository;
 
     @Test
     @DisplayName("스토어 생성")
@@ -51,7 +48,7 @@ public class ServiceTest {
         Store score = new Store(requestDto,user);
 
         //service
-        StoreService storeService = new StoreService(mockStoreRepository,storeOpeningHourRepository);
+        StoreService storeService = new StoreService(mockStoreRepository);
 
         // when
         given(mockStoreRepository.save(any())).willReturn(score);
@@ -83,7 +80,7 @@ public class ServiceTest {
         }
 
         //service
-        StoreService storeService = new StoreService(mockStoreRepository,storeOpeningHourRepository);
+        StoreService storeService = new StoreService(mockStoreRepository);
 
         // when
         given(mockStoreRepository.findAll()).willReturn(ls);
@@ -116,7 +113,7 @@ public class ServiceTest {
         Store score = new Store(requestDto,user);
 
         //service
-        StoreService storeService = new StoreService(mockStoreRepository,storeOpeningHourRepository);
+        StoreService storeService = new StoreService(mockStoreRepository);
 
         // when
         given(mockStoreRepository.findById(1L)).willReturn(Optional.of(score));
@@ -143,7 +140,7 @@ public class ServiceTest {
         //score
         Store score = new Store(requestDto,user);
         //service
-        StoreService storeService = new StoreService(mockStoreRepository,storeOpeningHourRepository);
+        StoreService storeService = new StoreService(mockStoreRepository);
 
         // when
         given(mockStoreRepository.findById(1L)).willReturn(Optional.of(score));
@@ -156,6 +153,9 @@ public class ServiceTest {
     void test5(){
         //given
 
+        StoreRequestDto requestDto = new StoreRequestDto();
+        requestDto.setName("new name");
+        requestDto.setCategory("Chicken");
         // 유저
         User user = new User();
         user.setUserId(1L);
@@ -164,10 +164,13 @@ public class ServiceTest {
         user.setName("스탄이");
 
         //service
-        StoreService storeService = new StoreService(mockStoreRepository,storeOpeningHourRepository);
+        StoreService storeService = new StoreService(mockStoreRepository);
+
+        //score
+        Store score = new Store(requestDto,user);
 
         // when
-        given(mockStoreRepository.findById(1L)).willReturn(Optional.of(new Store()));
+        given(mockStoreRepository.findById(1L)).willReturn(Optional.of(score));
         Long id = storeService.deleteStore(1L,user);
         //then
         assertEquals(1L,id);
@@ -195,7 +198,7 @@ public class ServiceTest {
         Store score = new Store(requestDto,user);
 
         //service
-        StoreService storeService = new StoreService(mockStoreRepository,storeOpeningHourRepository);
+        StoreService storeService = new StoreService(mockStoreRepository);
 
         // when
         given(mockStoreRepository.findById(1L)).willReturn(Optional.of(score));
@@ -232,7 +235,7 @@ public class ServiceTest {
         }
 
         //service
-        StoreService storeService = new StoreService(mockStoreRepository,storeOpeningHourRepository);
+        StoreService storeService = new StoreService(mockStoreRepository);
 
         // when
         given(mockStoreRepository.findAllByNameContains("new name")).willReturn(ls);

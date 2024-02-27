@@ -3,11 +3,10 @@ package com.example.sparta.domain.store.service;
 import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.dto.StoreResponseDto;
-import com.example.sparta.domain.store.entity.OpeningHours;
 import com.example.sparta.domain.store.entity.Store;
-import com.example.sparta.domain.store.repository.OpeningHoursRepository;
 import com.example.sparta.domain.store.repository.StoreRepository;
 import com.example.sparta.domain.user.entity.User;
+import com.example.sparta.domain.user.entity.UserRoleEnum;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class StoreService {
     private final StoreRepository storeRepository;
-    private final OpeningHoursRepository storeOpeningHoursRepository;
 
     public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
         Store store = new Store(requestDto,user);
@@ -87,36 +85,34 @@ public class StoreService {
         Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
         if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
             try {
-                store.openStore();
+                store.openStore(true);
             }
             catch (Exception e) {
-                throw new IllegalArgumentException("가계 오픈 하는데 오류 발생");
+                throw new IllegalArgumentException("가계 영업 시작 하는데 오류 발생");
+            }
+        }
+        return id;
+    }
+    public Long closeStore(Long id, User user) {
+        Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
+        if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
+            try {
+                store.openStore(false);
+            }
+            catch (Exception e) {
+                throw new IllegalArgumentException("가계 영업 종료 하는데 오류 발생");
             }
         }
         return id;
     }
 
-    public OpeningHoursDto createOpeningHours(Long id, OpeningHoursDto dto, User user) {
-        Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
-        if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
-            try {
-                OpeningHours storeOpeningHours = new OpeningHours(dto,store);
-                storeOpeningHoursRepository.save(storeOpeningHours);
-            }
-            catch (Exception e) {
-                throw new IllegalArgumentException("영업 시간 생성 오류 발생");
-            }
-        }
-        return dto;
-    }
 
     @Transactional
     public OpeningHoursDto updateOpeningHours(Long id, OpeningHoursDto dto, User user) {
         Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
         if(checkingUserAccessPermission(user.getUserId(),store.getOwner().getUserId())) {
             try {
-                OpeningHours openingHourssave = storeOpeningHoursRepository.findStoreOpeningHoursByStore(store).orElseThrow(()-> new NoSuchElementException("해당 가계에 "));
-                openingHourssave.update(dto);
+                store.setOpeningHours(dto);
             }
             catch (Exception e) {
                 throw new IllegalArgumentException("영업 시간 변경 오류 발생");
@@ -125,7 +121,18 @@ public class StoreService {
         return dto;
     }
 
-    // closing
+    // Admin tools
+    public StoreResponseDto forceStatus(Long id, int code, UserRoleEnum role) {
+        if(!role.equals(UserRoleEnum.ADMIN))
+            throw new IllegalArgumentException("해당 권한이 없습니다");
+
+        Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
+        store.updateStatus(code);
+
+        return new StoreResponseDto(store);
+    }
+
+
     private boolean checkingUserAccessPermission(long userId,long storeId ){
         if(userId==storeId){
             return true;
@@ -134,4 +141,6 @@ public class StoreService {
             throw new IllegalArgumentException("이 게시글 에 수정 권한이 없습니다.");
         }
     }
+
+
 }
