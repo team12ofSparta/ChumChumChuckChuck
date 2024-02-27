@@ -1,5 +1,6 @@
 package com.example.sparta.domain.store.controller;
 
+import com.example.sparta.domain.store.dto.CreateStoreRequestDto;
 import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.service.StoreService;
@@ -20,7 +21,7 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping()
-    public ResponseEntity<?> createStore(@RequestBody StoreRequestDto storeRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<?> createStore(@RequestBody CreateStoreRequestDto storeRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto
                         .builder()

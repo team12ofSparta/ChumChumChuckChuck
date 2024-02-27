@@ -1,5 +1,6 @@
 package com.example.sparta.domain.store.entity;
 
+import com.example.sparta.domain.store.dto.CreateStoreRequestDto;
 import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.user.entity.User;
@@ -12,9 +13,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @Table(name = "stores")
 public class Store extends Timestamped {
+    public Store(){
+        rating = 100f;
+        dibsCount=0;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +69,19 @@ public class Store extends Timestamped {
         rating = requestDto.getRating();
         dibsCount = requestDto.getDibsCount();
         reviewCount = requestDto.getReviewCount();
+        deliveryAddress = requestDto.getDeliveryAddress();
+
+        status = StoreStatus.PREPARING;
+    }
+    public Store(CreateStoreRequestDto requestDto,User user){
+        name = requestDto.getName();
+        owner = user;
+        category = requestDto.getCategory();
+        address = requestDto.getAddress();
+        content = requestDto.getContent();
+        rating = 0f;
+        dibsCount = 0;
+        reviewCount = 0;
         deliveryAddress = requestDto.getDeliveryAddress();
 
         status = StoreStatus.PREPARING;

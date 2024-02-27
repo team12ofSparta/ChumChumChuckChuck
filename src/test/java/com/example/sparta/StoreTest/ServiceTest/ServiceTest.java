@@ -1,5 +1,6 @@
 package com.example.sparta.storeTest.serviceTest;
 
+import com.example.sparta.domain.store.dto.CreateStoreRequestDto;
 import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.dto.StoreResponseDto;
@@ -36,7 +37,7 @@ public class ServiceTest {
         //given
 
         //스토어 request
-        StoreRequestDto requestDto = new StoreRequestDto();
+        CreateStoreRequestDto requestDto = new CreateStoreRequestDto();
         requestDto.setName("service name");
         requestDto.setCategory("Chicken");
 

@@ -28,6 +28,12 @@ public class RepositoryTest {
     //given
     StoreRequestDto requestDto = new StoreRequestDto();
     requestDto.setName("스토어이름");
+    requestDto.setRating(3.4f);
+    requestDto.setDibsCount(100);
+    requestDto.setDeliveryAddress("배달주소");
+    requestDto.setAddress("주소");
+    requestDto.setCategory("중국집");
+    requestDto.setReviewCount(100);
 
     User user = new User();
     user.setName("유저이름");
@@ -65,5 +71,8 @@ public class RepositoryTest {
         catch (NoSuchElementException e){
             fail();
         }
+
+    //
+
     }
 }

@@ -1,5 +1,6 @@
 package com.example.sparta.domain.store.service;
 
+import com.example.sparta.domain.store.dto.CreateStoreRequestDto;
 import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.dto.StoreResponseDto;
@@ -21,7 +22,7 @@ import java.util.NoSuchElementException;
 public class StoreService {
     private final StoreRepository storeRepository;
 
-    public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
+    public StoreResponseDto createStore(CreateStoreRequestDto requestDto, User user) {
         Store store = new Store(requestDto,user);
         Store saveStore = storeRepository.save(store);
         return new StoreResponseDto(saveStore);
