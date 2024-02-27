@@ -32,13 +32,19 @@ public class OrderController {
     public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder(
         @RequestBody CreateOrderRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        OrderResponseDto orderResponseDto = orderService.createOrder(requestDto.getRequests(),
-            userDetails.getUser());
-
+        OrderResponseDto orderResponseDto;
+        try {
+            orderResponseDto = orderService.createOrder(requestDto,
+                userDetails.getUser());
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(ResponseDto.<OrderResponseDto>builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .data(null)
+                .build());
+        }
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ResponseDto.<OrderResponseDto>builder()
                 .statusCode(HttpStatus.CREATED.value())
-                .message("주문생성 완료")
                 .data(orderResponseDto)
                 .build());
     }
@@ -53,14 +59,12 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ResponseDto.<OrderResponseDto>builder()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .message(e.getMessage())
                     .data(null)
                     .build()
                 );
         }
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.<OrderResponseDto>builder()
             .statusCode(HttpStatus.OK.value())
-            .message("주문 ID를 통한 주문 조회 성공")
             .data(orderResponseDto)
             .build()
         );
@@ -76,13 +80,11 @@ public class OrderController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.badRequest().body(ResponseDto.<List<OrderResponseDto>>builder()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .message(e.getMessage())
                 .data(null)
                 .build());
         }
         return ResponseEntity.ok().body(ResponseDto.<List<OrderResponseDto>>builder()
             .statusCode(HttpStatus.OK.value())
-            .message("주문 목록 조회 성공")
             .data(orderResponseDtoList)
             .build()
         );
@@ -96,13 +98,11 @@ public class OrderController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ResponseDto.<Void>builder()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .message(e.getMessage())
                 .data(null)
                 .build());
         }
         return ResponseEntity.ok().body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
-            .message("주문 삭제 성공")
             .data(null)
             .build()
         );
@@ -120,13 +120,11 @@ public class OrderController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ResponseDto.<OrderResponseDto>builder()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .message(e.getMessage())
                 .data(null)
                 .build());
         }
         return ResponseEntity.ok().body(ResponseDto.<OrderResponseDto>builder()
             .statusCode(HttpStatus.OK.value())
-            .message("주문 요청사항 수정 성공")
             .data(orderResponseDto)
             .build()
         );
