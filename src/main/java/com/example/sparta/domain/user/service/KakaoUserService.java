@@ -146,7 +146,7 @@ public class KakaoUserService {
                 kakaoUser = new User(kakaoUserInfoDto.getNickname(), encodedPassword, email, "수정필요"
                     , UserRoleEnum.USER, kakaoId);
             }
-            userRepository.save(kakaoUser);
+            kakaoUser = userRepository.save(kakaoUser);
 
         }
         return kakaoUser;
