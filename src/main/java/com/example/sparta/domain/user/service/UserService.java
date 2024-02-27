@@ -6,7 +6,6 @@ import com.example.sparta.domain.user.dto.UserPasswordUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserSignupRequestDto;
 import com.example.sparta.domain.user.entity.User;
-import com.example.sparta.domain.user.entity.UserRoleEnum;
 import com.example.sparta.domain.user.repository.UserRepository;
 import com.example.sparta.global.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,7 +34,7 @@ public class UserService {
             // 만약 DB에 동일한 Email 이 존재하면
             throw new IllegalArgumentException("이미 가입된 email 입니다");
         }
-        User user = new User(userSignupRequestDto,passwordEncoder);
+        User user = new User(userSignupRequestDto, passwordEncoder);
         // if문 안들어가고 잘 넘어오면 입력받아온 Name, password(인코딩한), email, Address 를 user 에 저장
 
         userRepository.save(user);
@@ -67,20 +66,21 @@ public class UserService {
     @Transactional
     public void userProfileUpdate(UserProfileUpdateRequestDto userProfileUpdateRequestDto,
         String jwtToken) {
-       String email = jwtUtil.getUserInfoFromToken(jwtToken).getSubject();
+        String email = jwtUtil.getUserInfoFromToken(jwtToken).getSubject();
         User userUp = userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+            .orElseThrow(() -> new IllegalArgumentException("로그인 유저 정보가 없습니다."));
 
         userUp.userUpdate(userProfileUpdateRequestDto);
     }
 
     @Transactional
     public void userPasswordUpdate(UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
-        String jwtToken) {
+        String jwtToken, User user) {
         String email = jwtUtil.getUserInfoFromToken(jwtToken).getSubject();
-        String password = (String) jwtUtil.getUserInfoFromToken(jwtToken).get("password");
+        String password = user.getPassword();
         User userUp = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+
         if (userPasswordUpdateRequestDto.getPassword() == null) {
             throw new IllegalArgumentException("현재 비밀번호를 입력해 주세요");
         }
@@ -91,11 +91,9 @@ public class UserService {
         if (userPasswordUpdateRequestDto.getNewpassword() == null) {
             throw new IllegalArgumentException("변경하는 비밀번호를 입력해 주세요");
         }
-        if (userPasswordUpdateRequestDto.getNewpassword() != null) {
-            if (!userPasswordUpdateRequestDto.getNewpassword()
-                .equals(userPasswordUpdateRequestDto.getCheckpassword())) {
-                throw new IllegalArgumentException("변경하는 비밀번호가 일치하지 않습니다");
-            }
+        if (!userPasswordUpdateRequestDto.getNewpassword()
+            .equals(userPasswordUpdateRequestDto.getCheckpassword())) {
+            throw new IllegalArgumentException("변경하는 비밀번호가 일치하지 않습니다");
         }
 
         userUp.userPasswordUpdate(userPasswordUpdateRequestDto, passwordEncoder);
