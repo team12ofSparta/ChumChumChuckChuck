@@ -126,7 +126,7 @@ public class ControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .principal(mockPrincipal)
                 )
-                .andExpect(status().is(201))
+                .andExpect(status().is(200))
                 .andDo(print());
     }
     @Test
@@ -138,7 +138,7 @@ public class ControllerTest {
         this.mvc.perform(delete("/stores/1")
                     .principal(mockPrincipal)
                 )
-                .andExpect(status().is(201))
+                .andExpect(status().is(200))
                 .andDo(print());
     }
 
@@ -176,7 +176,7 @@ public class ControllerTest {
         this.mvc.perform(get("/stores/1/open")
                 .principal(mockPrincipal)
             )
-            .andExpect(status().is(201))
+            .andExpect(status().is(200))
             .andDo(print());
     }
     @Test
@@ -188,7 +188,7 @@ public class ControllerTest {
         this.mvc.perform(get("/stores/1/close")
                 .principal(mockPrincipal)
             )
-            .andExpect(status().is(201))
+            .andExpect(status().is(200))
             .andDo(print());
     }
     @Test
@@ -207,7 +207,7 @@ public class ControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .principal(mockPrincipal)
             )
-            .andExpect(status().is(201))
+            .andExpect(status().is(200))
             .andDo(print());
     }
     // 관리자 권한

@@ -61,10 +61,10 @@ public class StoreController {
     @PutMapping("/{storeId}")
     public ResponseEntity<?> editStoreDetails(@PathVariable(name = "storeId") Long id,@RequestBody StoreRequestDto storeRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
         try {
-            return ResponseEntity.status(HttpStatus.CREATED)
+            return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto
                     .builder()
-                    .statusCode(201)
+                    .statusCode(200)
                     .data(storeService.editStore(id,storeRequestDto,userDetails.getUser()))
                     .build());
         }catch (Exception e){
@@ -140,10 +140,10 @@ public class StoreController {
     @GetMapping("/{storeId}/open")
     public ResponseEntity<?> openStore(@PathVariable(name = "storeId") Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
         try {
-            return ResponseEntity.status(HttpStatus.CREATED)
+            return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto
                     .builder()
-                    .statusCode(201)
+                    .statusCode(200)
                     .data(storeService.openStore(id,userDetails.getUser()))
                     //.message("가계 운영 시작")
                     .build());
@@ -162,10 +162,10 @@ public class StoreController {
     public ResponseEntity<?> closeStore(@PathVariable(name = "storeId") Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
 
         try {
-            return ResponseEntity.status(HttpStatus.CREATED)
+            return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto
                     .builder()
-                    .statusCode(201)
+                    .statusCode(200)
                     .data(storeService.closeStore(id,userDetails.getUser()))
                     //.message("가계 운영 시작")
                     .build());
@@ -182,10 +182,10 @@ public class StoreController {
     @PatchMapping("/openinghours/{storeId}")
     public ResponseEntity<?> updateStoreOpeningHours(@PathVariable(name = "storeId")Long id,@RequestBody OpeningHoursDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
         try{
-            return ResponseEntity.status(HttpStatus.CREATED)
+            return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto
                     .builder()
-                    .statusCode(201)
+                    .statusCode(200)
                     .data(storeService.updateOpeningHours(id,requestDto,userDetails.getUser()))
                     //.message("가계 의 영업 시간 이 등록 되었습니다.")
                     .build());

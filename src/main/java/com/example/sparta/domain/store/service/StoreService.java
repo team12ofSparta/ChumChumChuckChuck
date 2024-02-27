@@ -128,7 +128,7 @@ public class StoreService {
     @Transactional
     public StoreResponseDto forceStatus(Long id, int code, UserRoleEnum role) {
         if(!role.equals(UserRoleEnum.ADMIN))
-            throw new IllegalArgumentException("해당 권한이 없습니다");
+            throw new IllegalArgumentException("해당 권한이 없습니다.");
 
         Store store = storeRepository.findById(id).orElseThrow( ()->new NoSuchElementException("해당 가게를 찾을수 없어요."));
         store.updateStatus(code);
