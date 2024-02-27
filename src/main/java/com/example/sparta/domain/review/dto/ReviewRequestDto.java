@@ -13,6 +13,7 @@ public class ReviewRequestDto {
 
     private Integer rating;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAy;
+    private Long menuId;
+    private Long storeId;
+    private Long userId;
 }
