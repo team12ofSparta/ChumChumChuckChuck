@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserController {
 
     //Service 주입받기
@@ -37,7 +39,7 @@ public class UserController {
 
 
     // 회원 가입 하기
-    @PostMapping("/users/signup")
+    @PostMapping("/signup")
     public ResponseEntity<ResponseDto<Void>> usersSignup(
         @Valid @RequestBody UserSignupRequestDto userSignupRequestDto) {
         userService.userSignup(userSignupRequestDto);
@@ -51,7 +53,7 @@ public class UserController {
     }
 
     // 로그인 하기
-    @PostMapping("/users/login")
+    @PostMapping("/login")
     public ResponseEntity<ResponseDto<Void>> userLogin(
         @RequestBody UserLoginRequestDto userLoginRequestDto,
         HttpServletResponse httpServletResponse) {
@@ -66,7 +68,7 @@ public class UserController {
 
 
     //로그아웃 하기
-    @GetMapping("/users/logout")
+    @GetMapping("/logout")
     public ResponseEntity<ResponseDto<Void>> userLogout(
         HttpServletResponse httpServletResponse
     ) {
@@ -80,7 +82,7 @@ public class UserController {
     }
 
     //유저 정보 수정하기 (이름, 주소)
-    @PatchMapping("/users")
+    @PatchMapping
     public ResponseEntity<ResponseDto<Void>> userProfileUpdate(
         @RequestBody UserProfileUpdateRequestDto userProfileUpdateRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -95,7 +97,7 @@ public class UserController {
     }
 
     //유저 정보 수정하기 (비밀번호)
-    @PatchMapping("/users/password")
+    @PatchMapping("/password")
     public ResponseEntity<ResponseDto<Void>> userPasswordUpdate(
         @RequestBody UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -111,7 +113,7 @@ public class UserController {
 
 
     // 카카오 로그인
-    @GetMapping("/users/kakao")
+    @GetMapping("/kakao")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse httpServletResponse)
         throws JsonProcessingException {
         String token = kakaoUserService.kakaoLogin(code);   // jwt 토큰을 쿠키에 넣어주는 작업 해서 response 에 넣어줌
