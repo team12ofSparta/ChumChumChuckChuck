@@ -9,7 +9,6 @@ import com.example.sparta.global.jwt.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwt;
 import java.net.URI;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +46,7 @@ public class KakaoUserService {
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfoDto);
 
         // JWT 토큰 반환
-        String createToken = jwtUtil.createToken(kakaoUser.getEmail(), kakaoUser.getRole());
+        String createToken = jwtUtil.createToken(kakaoUser);
         return createToken;
     }
 
