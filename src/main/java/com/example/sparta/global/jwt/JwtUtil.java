@@ -124,6 +124,7 @@ public class JwtUtil {
         claims.put("userId", user.getUserId());
         claims.put("name", user.getName());
         claims.put("role", user.getRole());
+        claims.put("role", user.getPassword());
         claims.put("address", user.getAddress());
 
         return BEARER_PREFIX + Jwts.builder()
