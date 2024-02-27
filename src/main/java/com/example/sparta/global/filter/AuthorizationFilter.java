@@ -79,6 +79,8 @@ public class AuthorizationFilter extends
             }
         }
 
+        filterChain.doFilter(httpServletRequest,httpServletResponse);
+
 
     }
 
