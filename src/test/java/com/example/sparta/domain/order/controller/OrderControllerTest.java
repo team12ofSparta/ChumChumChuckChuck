@@ -3,12 +3,14 @@ package com.example.sparta.domain.order.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import com.example.sparta.domain.order.dto.CreateOrderRequestDto;
+import com.example.sparta.domain.order.dto.ModifyOrderRequestDto;
 import com.example.sparta.domain.order.dto.OrderResponseDto;
 import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.order.service.OrderService;
@@ -159,6 +161,60 @@ class OrderControllerTest {
                 delete("/orders/1")
                     .accept(MediaType.APPLICATION_JSON)
             );
+            //then
+            action.andDo(print()).andExpect(status().isBadRequest());
+        }
+    }
+    @Nested
+    @DisplayName("주문 요청사항 수정")
+    @WithMockUser
+    class modifyOrderRequests{
+        @Test
+        @DisplayName("-성공")
+        void modifyOrderRequest_success() throws Exception{
+            //given
+            Order order = new Order();
+            Store store = new Store();
+
+            order.setUser(testUser);
+            order.setStore(store);
+            OrderResponseDto orderResponseDto = new OrderResponseDto(
+                order, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
+            );
+
+            given(orderService.modifyOrderRequest(any(User.class), any(Long.class),any(ModifyOrderRequestDto.class))).willReturn(orderResponseDto);
+            ModifyOrderRequestDto requestDto = new ModifyOrderRequestDto("modify requests.");
+            //when
+            ResultActions action = mockMvc.perform(
+                patch("/orders/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestDto))
+            );
+
+            //then
+            action.andDo(print()).andExpect(status().isOk());
+        }
+        @Test
+        @DisplayName("-실패")
+        void modifyOrderRequest_fail() throws Exception{
+            //given
+            Order order = new Order();
+            Store store = new Store();
+
+            order.setUser(testUser);
+            order.setStore(store);
+
+            given(orderService.modifyOrderRequest(any(User.class), any(Long.class),any(ModifyOrderRequestDto.class))).willThrow(new IllegalArgumentException());
+            ModifyOrderRequestDto requestDto = new ModifyOrderRequestDto("modify requests.");
+            //when
+            ResultActions action = mockMvc.perform(
+                patch("/orders/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestDto))
+            );
+
             //then
             action.andDo(print()).andExpect(status().isBadRequest());
         }
