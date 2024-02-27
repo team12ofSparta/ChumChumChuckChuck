@@ -1,5 +1,6 @@
 package com.example.sparta.domain.order.service;
 
+import com.example.sparta.domain.order.dto.ModifyOrderRequestDto;
 import com.example.sparta.domain.order.dto.OrderResponseDto;
 import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.order.repository.OrderRepository;
@@ -63,6 +64,7 @@ public class OrderService {
     }
 
     private OrderResponseDto orderResponseDtoMaker(Order order) {
+
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
         List<Long> orderDetailIdList = new ArrayList<>();
         List<String> menuNameList = new ArrayList<>();
@@ -74,4 +76,26 @@ public class OrderService {
         }
         return new OrderResponseDto(order, orderDetailIdList, menuNameList, menuQuantityList);
     }
+
+    public void deleteOrder(User user, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+        if (!order.getUser().getUserId().equals(user.getUserId())) {
+            throw new IllegalArgumentException("주문 삭제 권한이 없습니다.");
+        }
+        orderRepository.delete(order);
+    }
+
+    @Transactional
+    public OrderResponseDto modifyOrderRequest(User user, Long orderId,
+        ModifyOrderRequestDto modifyOrderRequestDto) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+        if (!user.getUserId().equals(order.getUser().getUserId())) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
+        order.setRequests(modifyOrderRequestDto.getRequests());
+        return orderResponseDtoMaker(order);
+    }
+
 }
