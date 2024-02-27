@@ -81,11 +81,13 @@ public class OrderDetailService {
     }
 
     @Transactional
-    public void deleteOrderDetail(Long orderDetailId, User user) {
+    public Long deleteOrderDetail(Long orderDetailId, User user) {
 
         OrderDetail orderDetail = validateOrderDetail(orderDetailId, user);
 
         orderDetailRepository.delete(orderDetail);
+
+        return orderDetailId;
     }
 
     @Transactional
