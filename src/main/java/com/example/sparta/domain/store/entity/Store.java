@@ -13,12 +13,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @Table(name = "stores")
 public class Store extends Timestamped {
-    public Store(){
-        rating = 100f;
-        dibsCount=0;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
