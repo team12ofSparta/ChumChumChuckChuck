@@ -10,7 +10,6 @@ import com.example.sparta.global.dto.ResponseDto;
 import com.example.sparta.global.impl.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +18,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
@@ -33,12 +30,6 @@ public class UserControllerTest {
     UserDetailsImpl userDetails;
     @Mock
     HttpServletResponse httpServletResponse;
-    MockMvc mockMvc;
-
-    @BeforeEach
-    void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
-    }
 
     @Test
     @DisplayName("유저 회원 가입 성공 테스트")
@@ -119,7 +110,7 @@ public class UserControllerTest {
         String newpassword = "new123456";
         String checkpassword = "new123456";
         UserPasswordUpdateRequestDto userPasswordUpdateRequestDto = new UserPasswordUpdateRequestDto(
-          password,newpassword,checkpassword
+            password, newpassword, checkpassword
         );
 
         //when
