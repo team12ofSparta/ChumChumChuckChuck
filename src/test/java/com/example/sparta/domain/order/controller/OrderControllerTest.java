@@ -20,6 +20,8 @@ import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.impl.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -270,14 +272,49 @@ class OrderControllerTest {
                 action.andDo(print()).andExpect(status().isBadRequest());
             }
         }
-//        @Nested
-//        @DisplayName("목록 조회")
-//        class listOfOrders{
-//            @Test
-//            @DisplayName("- 성공")
-//            void getListOfOrder_success(){
-//
-//            }
-//        }
+        @Nested
+        @DisplayName("목록 조회")
+        class listOfOrders{
+            @Test
+            @DisplayName("- 성공")
+            void getListOfOrder_success() throws Exception{
+                //given
+                Order order = new Order();
+                Store store = new Store();
+
+                order.setUser(testUser);
+                order.setStore(store);
+                List<OrderResponseDto> orderResponseDtoList = new ArrayList<>();
+                given(orderService.getOrderList(any(User.class))).willReturn(orderResponseDtoList);
+
+                //when
+                ResultActions action = mockMvc.perform(
+                    get("/orders")
+                );
+
+                //then
+                action.andDo(print()).andExpect(status().isOk());
+            }
+            @Test
+            @DisplayName("- 실패")
+            void getListOfOrder_fail() throws Exception{
+                //given
+                Order order = new Order();
+                Store store = new Store();
+
+                order.setUser(testUser);
+                order.setStore(store);
+
+                given(orderService.getOrderList(any(User.class))).willThrow(new NoSuchElementException());
+
+                //when
+                ResultActions action = mockMvc.perform(
+                    get("/orders")
+                );
+
+                //then
+                action.andDo(print()).andExpect(status().isBadRequest());
+            }
+        }
     }
 }
