@@ -92,9 +92,9 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<ResponseDto<Void>> userProfileUpdate(
         @RequestBody UserProfileUpdateRequestDto userProfileUpdateRequestDto,
-        @RequestHeader("authorization") String jwtToken
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        userService.userProfileUpdate(userProfileUpdateRequestDto, jwtToken);
+        userService.userProfileUpdate(userProfileUpdateRequestDto, userDetails.getUser());
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .message("회원정보 수정 성공")
@@ -108,10 +108,9 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<ResponseDto<Void>> userPasswordUpdate(
         @RequestBody UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
-        @RequestHeader("authorization") String jwtToken,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        userService.userPasswordUpdate(userPasswordUpdateRequestDto, jwtToken,userDetails.getUser());
+        userService.userPasswordUpdate(userPasswordUpdateRequestDto, userDetails.getUser());
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .message("회원정보 수정 성공")
