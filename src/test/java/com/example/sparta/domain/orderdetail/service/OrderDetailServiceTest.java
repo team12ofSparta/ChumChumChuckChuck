@@ -1,4 +1,4 @@
-package com.example.sparta.orderdetail.service;
+package com.example.sparta.domain.orderdetail.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,11 +11,11 @@ import com.example.sparta.domain.orderdetail.dto.OrderDetailRequestDto;
 import com.example.sparta.domain.orderdetail.dto.OrderDetailResponseDto;
 import com.example.sparta.domain.orderdetail.entity.OrderDetail;
 import com.example.sparta.domain.orderdetail.repository.OrderDetailRepository;
-import com.example.sparta.domain.orderdetail.service.OrderDetailService;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.store.repository.StoreRepository;
 import com.example.sparta.domain.user.entity.User;
+import com.example.sparta.domain.user.entity.UserRoleEnum;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +46,7 @@ public class OrderDetailServiceTest {
         orderDetailService = new OrderDetailService(orderDetailRepository, storeRepository,
             menuRepository);
 
-        user = new User("user123", "password123", "user@user.com", "서울");
+        user = new User("user123", "password123", "user@user.com", "서울", UserRoleEnum.USER, 1L);
         user.setUserId(1L);
 
         StoreRequestDto storeRequestDto = new StoreRequestDto();

@@ -1,4 +1,4 @@
-package com.example.sparta.orderdetail.controller;
+package com.example.sparta.domain.orderdetail.controller;
 
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.anyInt;
@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.sparta.domain.menu.entity.Menu;
-import com.example.sparta.domain.orderdetail.controller.OrderDetailController;
 import com.example.sparta.domain.orderdetail.dto.GetOrderDetailResponseDto;
 import com.example.sparta.domain.orderdetail.dto.OrderDetailRequestDto;
 import com.example.sparta.domain.orderdetail.dto.OrderDetailResponseDto;
@@ -25,6 +24,7 @@ import com.example.sparta.domain.orderdetail.service.OrderDetailService;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
+import com.example.sparta.domain.user.entity.UserRoleEnum;
 import com.example.sparta.global.MockSpringSecurityFilter;
 import com.example.sparta.global.config.WebSecurityConfig;
 import com.example.sparta.global.impl.UserDetailsImpl;
@@ -86,7 +86,7 @@ class OrderDetailControllerTest {
         Long userId = 100L;
         String username = "abc123";
         String password = "abc12345";
-        user = new User(username, password, "abc123@naver.com", "인천");
+        user = new User(username, password, "abc123@naver.com", "인천", UserRoleEnum.USER, 1L);
         user.setUserId(userId);
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
         principal = new UsernamePasswordAuthenticationToken(userDetails, "",

@@ -1,20 +1,20 @@
-package com.example.sparta.orderdetail.repository;
+package com.example.sparta.domain.orderdetail.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.sparta.domain.menu.entity.Menu;
 import com.example.sparta.domain.menu.repository.MenuRepository;
 import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.order.repository.OrderRepository;
 import com.example.sparta.domain.orderdetail.entity.OrderDetail;
-import com.example.sparta.domain.orderdetail.repository.OrderDetailRepository;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.store.repository.StoreRepository;
 import com.example.sparta.domain.user.entity.User;
+import com.example.sparta.domain.user.entity.UserRoleEnum;
 import com.example.sparta.domain.user.repository.UserRepository;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class OrderDetailRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("user123", "password123", "user@naver.com", "인천");
+        user = new User("user123", "password123", "user@naver.com", "인천", UserRoleEnum.USER, 1L);
         user = userRepository.save(user);
 
         StoreRequestDto storeRequestDto = new StoreRequestDto();
@@ -88,11 +88,12 @@ public class OrderDetailRepositoryTest {
     @Test
     void findAllByUserAndOrderNull() {
         // given
-        User findUser = userRepository.findByName("user123").orElse(null);
+        User findUser = userRepository.findByEmail("user@naver.com").orElse(null);
 
         // when
         assert findUser != null;
-        List<OrderDetail> orderDetailList =  orderDetailRepository.findAllByUserAndOrderIsNull(findUser.getUserId());
+        List<OrderDetail> orderDetailList = orderDetailRepository.findAllByUserAndOrderIsNull(
+            findUser.getUserId());
 
         // then
         assertNotNull(orderDetailList);
