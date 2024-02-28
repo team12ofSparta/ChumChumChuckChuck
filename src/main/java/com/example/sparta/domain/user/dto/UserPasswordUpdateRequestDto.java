@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 public class UserPasswordUpdateRequestDto {
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9]{8,15}$")
     private String password;
 
     @NotBlank
