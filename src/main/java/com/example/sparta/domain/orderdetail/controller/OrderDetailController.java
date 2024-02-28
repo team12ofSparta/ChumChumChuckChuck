@@ -43,7 +43,7 @@ public class OrderDetailController {
         );
     }
 
-    @GetMapping("/orderDetails")
+    @GetMapping("/order-details")
     public ResponseEntity<ResponseDto<GetOrderDetailResponseDto>> getOrderDetail(
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
@@ -55,7 +55,7 @@ public class OrderDetailController {
                 .data(getOrderDetailResponseDto).build());
     }
 
-    @DeleteMapping("/orderDetails/{orderDetailId}")
+    @DeleteMapping("/order-details/{orderDetailId}")
     public ResponseEntity<ResponseDto<Void>> deleteOrderDetail(@PathVariable Long orderDetailId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
@@ -64,7 +64,7 @@ public class OrderDetailController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/orderDetails/{orderDetailId}")
+    @PatchMapping("/order-details/{orderDetailId}")
     public ResponseEntity<ResponseDto<OrderDetailResponseDto>> updateOrderDetail(
         @PathVariable Long orderDetailId, @RequestParam(name = "quantity") Integer quantity,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {

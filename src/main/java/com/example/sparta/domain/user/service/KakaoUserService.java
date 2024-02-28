@@ -33,7 +33,6 @@ public class KakaoUserService {
     private final RestTemplate restTemplate;
     private final JwtUtil jwtUtil;
 
-
     public String kakaoLogin(String code) throws JsonProcessingException {
         //인가 코드로 액세스 토큰 요청
         String accessToken = getToken(code);

@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class StoreResponseDto {
+
     private Long storeId;
 
     private String name;
@@ -28,7 +29,7 @@ public class StoreResponseDto {
 
     private String deliveryAddress;
 
-    public  StoreResponseDto(Store store){
+    public StoreResponseDto(Store store) {
         this.storeId = store.getStoreId();
         this.deliveryAddress = store.getDeliveryAddress();
         this.name = store.getName();

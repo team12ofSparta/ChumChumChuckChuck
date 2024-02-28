@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.sparta.domain.menu.entity.Menu;
+import com.example.sparta.domain.orderdetail.dto.GetOrderDetailMenuResponseDto;
 import com.example.sparta.domain.orderdetail.dto.GetOrderDetailResponseDto;
 import com.example.sparta.domain.orderdetail.dto.OrderDetailRequestDto;
 import com.example.sparta.domain.orderdetail.dto.OrderDetailResponseDto;
@@ -142,12 +143,18 @@ class OrderDetailControllerTest {
     @Test
     void getOrderDetail() throws Exception {
         // given
+        List<GetOrderDetailMenuResponseDto> responseDtoList =
+            List.of(GetOrderDetailMenuResponseDto.builder().menuId(menu1.getMenuId())
+                    .menuName(menu1.getName()).menuPrice(menu1.getPrice())
+                    .quantity(orderDetail1.getQuantity()).build(),
+                GetOrderDetailMenuResponseDto.builder().menuId(menu2.getMenuId())
+                    .menuName(menu2.getName()).menuPrice(menu2.getPrice())
+                    .quantity(orderDetail2.getQuantity()).build());
+
         GetOrderDetailResponseDto responseDto = GetOrderDetailResponseDto.builder()
             .storeId(store.getStoreId())
-            .storeName(store.getName()).menuIdList(List.of(menu1.getMenuId(), menu2.getMenuId()))
-            .menuNameList(List.of(menu1.getName(), menu2.getName()))
-            .menuPriceList(List.of(menu1.getPrice(), menu2.getPrice()))
-            .quantityList(List.of(orderDetail1.getQuantity(), orderDetail2.getQuantity())).build();
+            .storeName(store.getName())
+            .orderDetailMenuResponseDtoList(responseDtoList).build();
 
         given(orderDetailService.getOrderDetail(any(User.class))).willReturn(responseDto);
 

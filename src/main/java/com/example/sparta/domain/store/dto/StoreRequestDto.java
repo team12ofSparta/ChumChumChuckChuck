@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StoreRequestDto {
+
     private String name;
     private String category;
     private String address;

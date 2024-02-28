@@ -21,7 +21,7 @@ public class DibsController {
 
     private final DibsService dibsServices;
 
-    @PostMapping("/store/{storeId}")
+    @PostMapping("/stores/{storeId}")
     public ResponseEntity<ResponseDto<DibsResponseDto>> createDibs(
         @PathVariable(name = "storeId") Long id,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -33,7 +33,7 @@ public class DibsController {
                 .build());
     }
 
-    @DeleteMapping("/store/{storeId}")
+    @DeleteMapping("/stores/{storeId}")
     public ResponseEntity<ResponseDto<Long>> deleteDibs(@PathVariable(name = "storeId") Long id,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK)

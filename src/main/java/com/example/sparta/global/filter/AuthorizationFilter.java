@@ -1,7 +1,7 @@
 package com.example.sparta.global.filter;
 
 import com.example.sparta.global.dto.ExceptionDto;
-import com.example.sparta.global.impl.UserDetailsService;
+import com.example.sparta.global.impl.UserDetailsServiceImpl;
 import com.example.sparta.global.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -26,7 +26,7 @@ public class AuthorizationFilter extends
 
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Override
     protected void doFilterInternal(
@@ -50,7 +50,7 @@ public class AuthorizationFilter extends
                 // Authentication (인증된 정보) 를 담고 있는 Holder
                 // SecurityContextHolder 가 가진 값을 통해 인증이 되었나 확인할 수있음.
 
-                UserDetails userDetails = userDetailsService.getUserDetails(email);
+                UserDetails userDetails = userDetailsServiceImpl.getUserDetails(email);
                 //userDetails 에 유저의 상세 정보를 넣음
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails,

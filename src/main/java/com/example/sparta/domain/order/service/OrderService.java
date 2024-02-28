@@ -89,13 +89,21 @@ public class OrderService {
         return new OrderResponseDto(order, responseBucketList);
     }
 
+    @Transactional
     public Long deleteOrder(User user, Long orderId) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+
         if (!order.getUser().getUserId().equals(user.getUserId())) {
             throw new IllegalArgumentException("주문 삭제 권한이 없습니다.");
         }
+
+        List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
+
+        orderDetailRepository.deleteAll(orderDetailList);
+
         orderRepository.delete(order);
+
         return order.getOrderId();
     }
 

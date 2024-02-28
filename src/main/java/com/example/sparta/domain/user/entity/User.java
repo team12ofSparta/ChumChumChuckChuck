@@ -12,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -47,14 +46,16 @@ public class User extends Timestamped {
 
     private Long kakaoId;
 
-    public User(UserSignupRequestDto userSignupRequestDto,PasswordEncoder passwordEncoder) {
+    public User(UserSignupRequestDto userSignupRequestDto, PasswordEncoder passwordEncoder) {
         this.name = userSignupRequestDto.getName();
         this.password = passwordEncoder.encode(userSignupRequestDto.getPassword());
         this.email = userSignupRequestDto.getEmail();
         this.address = userSignupRequestDto.getAddress();
-        this.role =  UserRoleEnum.USER;
+        this.role = UserRoleEnum.USER;
     }
-    public User(String name, String password, String email, String address, UserRoleEnum role, Long kakaoId) {
+
+    public User(String name, String password, String email, String address, UserRoleEnum role,
+        Long kakaoId) {
         this.name = name;
         this.password = password;
         this.email = email;
@@ -62,6 +63,7 @@ public class User extends Timestamped {
         this.role = role;
         this.kakaoId = kakaoId;
     }
+
     public User(String name, String password, String email, String address) {
         this.name = name;
         this.password = password;
@@ -70,13 +72,14 @@ public class User extends Timestamped {
     }
 
     public void userUpdate(UserProfileUpdateRequestDto userProfileReworkRequestDto) {
-        if(userProfileReworkRequestDto.getName()!=null){
+        if (userProfileReworkRequestDto.getName() != null) {
             this.name = userProfileReworkRequestDto.getName();
         }
-        if(userProfileReworkRequestDto.getAddress() != null){
+        if (userProfileReworkRequestDto.getAddress() != null) {
             this.address = userProfileReworkRequestDto.getAddress();
         }
     }
+
     public void userPasswordUpdate(
         UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
         PasswordEncoder passwordEncoder) {

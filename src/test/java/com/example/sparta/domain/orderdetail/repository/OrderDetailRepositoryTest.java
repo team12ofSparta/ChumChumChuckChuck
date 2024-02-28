@@ -92,8 +92,8 @@ public class OrderDetailRepositoryTest {
 
         // when
         assert findUser != null;
-        List<OrderDetail> orderDetailList = orderDetailRepository.findAllByUserAndOrderIsNull(
-            findUser.getUserId());
+        List<OrderDetail> orderDetailList = orderDetailRepository.findAllByUserAndOrder(findUser,
+            null);
 
         // then
         assertNotNull(orderDetailList);

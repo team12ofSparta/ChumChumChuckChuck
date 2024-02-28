@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentNotValidException.class})
-    public ResponseEntity<ExceptionDto> handleException(IllegalArgumentException e){
+    public ResponseEntity<ExceptionDto> handleException(IllegalArgumentException e) {
         ExceptionDto exceptionDto = ExceptionDto.builder()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .state(HttpStatus.BAD_REQUEST)
             .message(e.getMessage())
             .build();
-        return new ResponseEntity<>(exceptionDto,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({NullPointerException.class, NoSuchElementException.class})
