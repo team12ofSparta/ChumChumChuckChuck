@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -60,6 +61,12 @@ public class User extends Timestamped {
         this.address = address;
         this.role = role;
         this.kakaoId = kakaoId;
+    }
+    public User(String name, String password, String email, String address) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.address = address;
     }
 
     public void userUpdate(UserProfileUpdateRequestDto userProfileReworkRequestDto) {

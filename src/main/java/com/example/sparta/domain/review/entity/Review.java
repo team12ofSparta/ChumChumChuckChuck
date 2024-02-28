@@ -1,6 +1,7 @@
 package com.example.sparta.domain.review.entity;
 
 import com.example.sparta.domain.menu.entity.Menu;
+import com.example.sparta.domain.review.dto.ReviewRequestDto;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.entity.Timestamped;
@@ -19,7 +20,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "reviews")
 public class Review extends Timestamped {
@@ -45,4 +45,18 @@ public class Review extends Timestamped {
     @JoinColumn(name = "menu_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Menu menu;
+
+    //생성자
+    public Review(ReviewRequestDto reviewRequestDto, User user , Store store) {
+        this.rating = reviewRequestDto.getRating();
+        this.content = reviewRequestDto.getContent();
+        this.user = user;
+        this.store = store;
+        this.menu = menu;
+    }
+
+    public void updateOne(Integer rating, String content) {
+        this.rating = rating;
+        this.content = content;
+    }
 }
