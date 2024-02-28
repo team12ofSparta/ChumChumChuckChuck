@@ -17,7 +17,6 @@ public class UserLoginRequestDto {
     @NotBlank
     private String email;
 
-    @Pattern(regexp = "^[a-zA-Z0-9]{8,15}$")
     private String password;
 
 }
