@@ -5,6 +5,7 @@ import com.example.sparta.domain.user.dto.UserLoginRequestDto;
 import com.example.sparta.domain.user.dto.UserPasswordUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserSignupRequestDto;
+import com.example.sparta.domain.user.dto.UserSignupResponseDto;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.domain.user.repository.UserRepository;
 import com.example.sparta.global.jwt.JwtUtil;
@@ -26,7 +27,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
 
 
-    public void userSignup(UserSignupRequestDto userSignupRequestDto) {
+    public UserSignupResponseDto userSignup(UserSignupRequestDto userSignupRequestDto) {
         String email = userSignupRequestDto.getEmail();
 
         // 이미 가입한 유저인지 체크하기
@@ -39,6 +40,13 @@ public class UserService {
 
         userRepository.save(user);
         // 해당 user 를 Repository 를 통해서 DB에 저장.
+
+        // 테스트에서 체크할 내용
+        return UserSignupResponseDto.builder()
+            .name(user.getName())
+            .email(user.getEmail())
+            .address(user.getAddress())
+            .build();
     }
 
     public void userLogin(UserLoginRequestDto userLoginRequestDto,
