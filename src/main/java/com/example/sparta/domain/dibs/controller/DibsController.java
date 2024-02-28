@@ -1,7 +1,7 @@
 package com.example.sparta.domain.dibs.controller;
 
+import com.example.sparta.domain.dibs.dto.DibsResponseDto;
 import com.example.sparta.domain.dibs.service.DibsService;
-import com.example.sparta.global.dto.ExceptionDto;
 import com.example.sparta.global.dto.ResponseDto;
 import com.example.sparta.global.impl.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,46 +18,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping("/dibs")
 public class DibsController {
-  private final DibsService dibsServices;
 
-  @PostMapping("/store/{storeId}")
-  public ResponseEntity<?> createDibs(@PathVariable(name = "storeId")Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
-    try {
-      return ResponseEntity.status(HttpStatus.CREATED)
-          .body(ResponseDto
-              .builder()
-              .statusCode(201)
-              .data(dibsServices.createDibs(id,userDetails.getUser()))
-              .build());
-    }
-    catch (Exception e){
-      return ResponseEntity.status(HttpStatus.CREATED)
-          .body(ExceptionDto
-              .builder()
-              .statusCode(500)
-              .message("찜 들록 하는데 실패")
-              .build());
-    }
-  }
-//
-@DeleteMapping("/store/{storeId}")
-public ResponseEntity<?> deleteDibs(@PathVariable(name = "storeId")Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
-  try {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(ResponseDto
-            .builder()
-            .statusCode(200)
-            .data(dibsServices.deleteDibs(id,userDetails.getUser()))
-            .build());
-  }
-  catch (Exception e){
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(ExceptionDto
-            .builder()
-            .statusCode(500)
-            .message("찜 들록 하는데 실패")
-            .build());
-  }
-}
+    private final DibsService dibsServices;
 
+    @PostMapping("/store/{storeId}")
+    public ResponseEntity<ResponseDto<DibsResponseDto>> createDibs(
+        @PathVariable(name = "storeId") Long id,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ResponseDto
+                .<DibsResponseDto>builder()
+                .statusCode(201)
+                .data(dibsServices.createDibs(id, userDetails.getUser()))
+                .build());
+    }
+
+    @DeleteMapping("/store/{storeId}")
+    public ResponseEntity<ResponseDto<Long>> deleteDibs(@PathVariable(name = "storeId") Long id,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ResponseDto
+                .<Long>builder()
+                .statusCode(200)
+                .data(dibsServices.deleteDibs(id, userDetails.getUser()))
+                .build());
+    }
 }

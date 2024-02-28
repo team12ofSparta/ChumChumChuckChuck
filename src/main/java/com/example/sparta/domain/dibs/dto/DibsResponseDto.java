@@ -5,18 +5,18 @@ import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class DibsDto {
-  private User user;
-  private Store store;
+public class DibsResponseDto {
 
-  public DibsDto(Dibs dibs){
-    this.store = dibs.getStore();
-    this.user = dibs.getUser();
-  }
+    private User user;
+    private Store store;
+
+    public DibsResponseDto(Dibs dibs) {
+        this.store = dibs.getStore();
+        this.user = dibs.getUser();
+    }
 }

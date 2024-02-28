@@ -2,6 +2,7 @@ package com.example.sparta.domain.orderdetail.service;
 
 import com.example.sparta.domain.menu.entity.Menu;
 import com.example.sparta.domain.menu.repository.MenuRepository;
+import com.example.sparta.domain.orderdetail.dto.GetOrderDetailMenuResponseDto;
 import com.example.sparta.domain.orderdetail.dto.OrderDetailRequestDto;
 import com.example.sparta.domain.orderdetail.dto.OrderDetailResponseDto;
 import com.example.sparta.domain.orderdetail.dto.GetOrderDetailResponseDto;
@@ -63,21 +64,17 @@ public class OrderDetailService {
         Long storeId = orderDetailList.get(0).getStore().getStoreId();
         String storeName = orderDetailList.get(0).getStore().getName();
 
-        List<Long> menuIdList = new ArrayList<>();
-        List<String> menuNameList = new ArrayList<>();
-        List<Long> menuPriceList = new ArrayList<>();
-        List<Integer> quantityList = new ArrayList<>();
+        List<GetOrderDetailMenuResponseDto> orderDetailMenuResponseDtoList = new ArrayList<>();
 
         for (OrderDetail od : orderDetailList) {
-            menuIdList.add(od.getMenu().getMenuId());
-            menuNameList.add(od.getMenu().getName());
-            menuPriceList.add(od.getMenu().getPrice());
-            quantityList.add(od.getQuantity());
+            orderDetailMenuResponseDtoList.add(
+                GetOrderDetailMenuResponseDto.builder().menuId(od.getMenu().getMenuId())
+                    .menuName(od.getMenu().getName()).menuPrice(od.getMenu().getPrice())
+                    .quantity(od.getQuantity()).build());
         }
 
         return GetOrderDetailResponseDto.builder().storeId(storeId).storeName(storeName)
-            .menuIdList(menuIdList).menuNameList(menuNameList)
-            .menuPriceList(menuPriceList).quantityList(quantityList).build();
+            .orderDetailMenuResponseDtoList(orderDetailMenuResponseDtoList).build();
     }
 
     @Transactional

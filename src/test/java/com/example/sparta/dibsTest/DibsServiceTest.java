@@ -3,9 +3,8 @@ package com.example.sparta.dibsTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 
-import com.example.sparta.domain.dibs.dto.DibsDto;
+import com.example.sparta.domain.dibs.dto.DibsResponseDto;
 import com.example.sparta.domain.dibs.entity.Dibs;
 import com.example.sparta.domain.dibs.repository.DibsRepository;
 import com.example.sparta.domain.dibs.service.DibsService;
@@ -53,7 +52,7 @@ public class DibsServiceTest {
 
     given(mockStoreRepository.findById(1L)).willReturn(Optional.of(store));
 
-    DibsDto answer = service.createDibs(1L,user);
+    DibsResponseDto answer = service.createDibs(1L,user);
 
     //then
     assertEquals(dibs.getUser(),answer.getUser());

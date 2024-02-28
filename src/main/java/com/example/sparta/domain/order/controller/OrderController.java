@@ -7,7 +7,6 @@ import com.example.sparta.domain.order.service.OrderService;
 import com.example.sparta.global.dto.ResponseDto;
 import com.example.sparta.global.impl.UserDetailsImpl;
 import java.util.List;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,16 +31,12 @@ public class OrderController {
     public ResponseEntity<ResponseDto<OrderResponseDto>> createOrder(
         @RequestBody CreateOrderRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        
         OrderResponseDto orderResponseDto;
-        try {
-            orderResponseDto = orderService.createOrder(requestDto,
-                userDetails.getUser());
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().body(ResponseDto.<OrderResponseDto>builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .data(null)
-                .build());
-        }
+
+        orderResponseDto = orderService.createOrder(requestDto,
+            userDetails.getUser());
+
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ResponseDto.<OrderResponseDto>builder()
                 .statusCode(HttpStatus.CREATED.value())
@@ -52,17 +47,11 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<ResponseDto<OrderResponseDto>> getOrder(
         @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long orderId) {
+
         OrderResponseDto orderResponseDto;
-        try {
-            orderResponseDto = orderService.getOrder(userDetails.getUser(), orderId);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ResponseDto.<OrderResponseDto>builder()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .data(null)
-                    .build()
-                );
-        }
+
+        orderResponseDto = orderService.getOrder(userDetails.getUser(), orderId);
+
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.<OrderResponseDto>builder()
             .statusCode(HttpStatus.OK.value())
             .data(orderResponseDto)
@@ -72,17 +61,12 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<ResponseDto<List<OrderResponseDto>>> getOrderList(
-        @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
         List<OrderResponseDto> orderResponseDtoList;
-        try {
-            orderResponseDtoList = orderService.getOrderList(userDetails.getUser());
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.badRequest().body(ResponseDto.<List<OrderResponseDto>>builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .data(null)
-                .build());
-        }
+
+        orderResponseDtoList = orderService.getOrderList(userDetails.getUser());
+
         return ResponseEntity.ok().body(ResponseDto.<List<OrderResponseDto>>builder()
             .statusCode(HttpStatus.OK.value())
             .data(orderResponseDtoList)
@@ -93,14 +77,9 @@ public class OrderController {
     @DeleteMapping("/{orderId}")
     public ResponseEntity<ResponseDto<Void>> deleteOrder(
         @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long orderId) {
-        try {
-            orderService.deleteOrder(userDetails.getUser(), orderId);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(ResponseDto.<Void>builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .data(null)
-                .build());
-        }
+
+        orderService.deleteOrder(userDetails.getUser(), orderId);
+
         return ResponseEntity.ok().body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .data(null)
@@ -110,19 +89,14 @@ public class OrderController {
 
     @PatchMapping("/{orderId}")
     public ResponseEntity<ResponseDto<OrderResponseDto>> modifyOrderRequest(
-        @AuthenticationPrincipal UserDetailsImpl userDetails
-        , @PathVariable Long orderId
-        , @RequestBody ModifyOrderRequestDto modifyOrderRequestDto) {
+        @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long orderId,
+        @RequestBody ModifyOrderRequestDto modifyOrderRequestDto) {
+
         OrderResponseDto orderResponseDto;
-        try {
-            orderResponseDto = orderService.modifyOrderRequest(userDetails.getUser(),
-                orderId, modifyOrderRequestDto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(ResponseDto.<OrderResponseDto>builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .data(null)
-                .build());
-        }
+
+        orderResponseDto = orderService.modifyOrderRequest(userDetails.getUser(),
+            orderId, modifyOrderRequestDto);
+
         return ResponseEntity.ok().body(ResponseDto.<OrderResponseDto>builder()
             .statusCode(HttpStatus.OK.value())
             .data(orderResponseDto)
