@@ -144,10 +144,4 @@ public class JwtUtil {
         // compact() : JWT 생성하고 직렬화.
 
     }
-
-
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 24a303a9f7697e84e7594977cd3d4f57d2728d80

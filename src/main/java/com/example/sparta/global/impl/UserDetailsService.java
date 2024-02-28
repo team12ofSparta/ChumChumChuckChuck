@@ -13,17 +13,10 @@ import org.springframework.stereotype.Service;
 public class UserDetailsService {
 
     private final UserRepository userRepository;
-<<<<<<< HEAD
-    // username 값으로 유저 데이터 베이스에서 해당 값을 찾아와서 UserDetails 를 통해 세부 정보를 저장
-    public UserDetails getUserDetails(String username) {
-        User user = userRepository.findByName(username)
-=======
-
 
     // 이메일 값으로 유저 데이터 베이스에서 해당 값을 찾아와서 UserDetails 를 통해 세부 정보를 저장
     public UserDetails getUserDetails(String email) {
         User user = userRepository.findByEmail(email)
->>>>>>> 24a303a9f7697e84e7594977cd3d4f57d2728d80
             // 만약 username 을 못찾으면 Not Found 로 던지고,
             .orElseThrow(() -> new UsernameNotFoundException("Not Found " + email));
         // username 과 동일한 정보를 찾으면 해당 user 의 각종 값을 담아서 UserDetails 형태로 반환
