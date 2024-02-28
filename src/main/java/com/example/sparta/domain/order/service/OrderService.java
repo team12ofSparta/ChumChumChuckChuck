@@ -52,6 +52,9 @@ public class OrderService {
     public OrderResponseDto getOrder(User user, Long orderId) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문번호입니다."));
+        if(!user.getUserId().equals(order.getUser().getUserId())){
+            throw new IllegalArgumentException("주문 조회 권한이 없습니다.");
+        }
         return orderResponseDtoMaker(order);
     }
 
