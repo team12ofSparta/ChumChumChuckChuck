@@ -2,6 +2,7 @@ package com.example.sparta.userTest.controllerTest;
 
 import com.example.sparta.domain.user.controller.UserController;
 import com.example.sparta.domain.user.dto.UserLoginRequestDto;
+import com.example.sparta.domain.user.dto.UserPasswordUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserSignupRequestDto;
 import com.example.sparta.domain.user.service.UserService;
@@ -9,6 +10,7 @@ import com.example.sparta.global.dto.ResponseDto;
 import com.example.sparta.global.impl.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +35,7 @@ public class UserControllerTest {
     HttpServletResponse httpServletResponse;
     MockMvc mockMvc;
 
+    @BeforeEach
     void beforeEach() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
@@ -61,7 +64,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("유저 로그인 테스트")
-    public void userSignupTest02() {
+    public void userLoginTest() {
         //given
 
         String password = "123456789";
@@ -81,7 +84,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("유저 로그아웃 테스트")
-    public void userSignupTest03() {
+    public void userLogoutTest() {
         //given
         //when
 
@@ -92,7 +95,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("유저 정보수정 테스트")
-    public void userSignupTest04() {
+    public void userProfileUpdateTest() {
         //given
         String name = "변경 유저 이름";
         String address = "변경 주소";
@@ -112,16 +115,17 @@ public class UserControllerTest {
     @DisplayName("유저 비밀번호 수정 테스트")
     public void userSignupTest05() {
         //given
-        String name = "변경 유저 이름";
-        String address = "변경 주소";
-        UserProfileUpdateRequestDto userProfileUpdateRequestDto = new UserProfileUpdateRequestDto(
-            name, address
+        String password = "123456789";
+        String newpassword = "new123456";
+        String checkpassword = "new123456";
+        UserPasswordUpdateRequestDto userPasswordUpdateRequestDto = new UserPasswordUpdateRequestDto(
+          password,newpassword,checkpassword
         );
 
         //when
 
-        ResponseEntity<ResponseDto<Void>> response = userController.userProfileUpdate(
-            userProfileUpdateRequestDto, userDetails);
+        ResponseEntity<ResponseDto<Void>> response = userController.userPasswordUpdate(
+            userPasswordUpdateRequestDto, userDetails);
         //then
         Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     }
