@@ -1,12 +1,13 @@
 package com.example.sparta.domain.user.dto;
 
-import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class UserSignupResponseDto {
 
     private String name;
