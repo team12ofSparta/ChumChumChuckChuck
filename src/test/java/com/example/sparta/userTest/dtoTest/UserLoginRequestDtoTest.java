@@ -12,7 +12,7 @@ public class UserLoginRequestDtoTest {
     void UserLoginRequestDto() {
         //given
         String email = "test@test.com";
-        String password = "test123";
+        String password = "test1234";
         //when
         UserLoginRequestDto userLoginRequestDto = new UserLoginRequestDto(email, password);
 
