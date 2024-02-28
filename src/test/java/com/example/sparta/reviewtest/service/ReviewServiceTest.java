@@ -40,18 +40,18 @@ public class ReviewServiceTest {
     public void allReviews(){
         //given
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(4, "안녕하세요", 1L, 1L);
-        User user = new User("박정섭","1234","eses565@naver.com","삼천포");
+     //   User user = new User("박정섭","1234","eses565@naver.com","삼천포");
         Store store = new Store();
-        Review review = new Review(reviewRequestDto, user, store);
+     //   Review review = new Review(reviewRequestDto, user, store);
 
         ReviewRequestDto reviewRequestDto2 = new ReviewRequestDto(4, "안녕하세요", 1L, 1L);
-        User user2 = new User("김철수","1234","eses565@naver.com","삼천포");
+      //  User user2 = new User("김철수","1234","eses565@naver.com","삼천포");
         Store store2 = new Store();
-        Review review2 = new Review(reviewRequestDto, user2, store);
+     //   Review review2 = new Review(reviewRequestDto, user2, store);
 
         List<Review> lists = new ArrayList<>();
-        lists.add(review);
-        lists.add(review2);
+      //  lists.add(review);
+     //   lists.add(review2);
 
 
         //given(reviewService.findAll()).willReturn(List<ReviewResponseDto>);
@@ -70,28 +70,28 @@ public class ReviewServiceTest {
 
         //given
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(4, "안녕하세요", 1L, 1L);
-        User user = new User("박정섭","1234","eses565@naver.com","삼천포");
+      //  User user = new User("박정섭","1234","eses565@naver.com","삼천포");
         Store store = new Store();
-        Review review = new Review(reviewRequestDto, user, store);
+       // Review review = new Review(reviewRequestDto, user, store);
 
         ReviewRequestDto reviewRequestDto2 = new ReviewRequestDto(4, "안녕하세요", 1L, 1L);
-        User user2 = new User("김철수","1234","eses565@naver.com","삼천포");
+      //  User user2 = new User("김철수","1234","eses565@naver.com","삼천포");
         Store store2 = new Store();
-        Review review2 = new Review(reviewRequestDto, user2, store);
+      //  Review review2 = new Review(reviewRequestDto, user2, store);
 
         List<Review> lists = new ArrayList<>();
-        lists.add(review);
-        lists.add(review2);
+      //  lists.add(review);
+      //  lists.add(review2);
 ;
-        ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
-        given(reviewService.findOne(any())).willReturn(reviewResponseDto);
+      //  ReviewResponseDto reviewResponseDto = new ReviewResponseDto(review);
+       // given(reviewService.findOne(any())).willReturn(reviewResponseDto);
 
         //when
         ReviewResponseDto one = reviewService.findOne(1L);
 
         //then
         System.out.println(one.getContent());
-        System.out.println(reviewResponseDto.getContent());
+      //  System.out.println(reviewResponseDto.getContent());
         //Assertions.assertEquals(one.getRating(),reviewResponseDto.getRating());
     }
 

@@ -1,6 +1,7 @@
 package com.example.sparta.global.jwt;
 
 
+import com.example.sparta.domain.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -25,7 +26,11 @@ public class JwtUtil {
 
 
     // Header Key 값
-    public final String AUTHORIZATION_HEADER = "Authoriztion";
+    public final String AUTHORIZATION_HEADER = "Authorization";
+
+
+    // 권한 사용할때 필요함
+    public static final String AUTHORIZATION_KEY = "auth";
 
     // 토큰 식별자 (값이 Bearer  으로 시작해야함)
     public final String BEARER_PREFIX = "Bearer ";
@@ -45,21 +50,20 @@ public class JwtUtil {
 
     // 키 값을 만들어서 주입
     @PostConstruct // 딱한번만 실행되면 될때 사용
-    public void init(){
+    public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
     }
 
 
-
     // 받아온 토큰이 정상인지 확인하고 토큰의 바디값을 리턴함
-    public String resolveToken(HttpServletRequest httpServletRequest){
+    public String resolveToken(HttpServletRequest httpServletRequest) {
         // 받아온 Request의 Header 값이 AUTHORIZATION_HEADER 와 같으면
         // Request의 body 값을 bearerToken 에 저장
         String bearerToken = httpServletRequest.getHeader(AUTHORIZATION_HEADER);
 
         // 만약 받아온 바디값이 있고 && BEARER_PREFIX 으로 시작하면
-        if(StringUtils.hasText(bearerToken)&& bearerToken.startsWith(BEARER_PREFIX)){
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             // 맨앞 7글자를 지움 (BEARER_PREFIX 만큼이 딱 7글자)
             return bearerToken.substring(7);
         }
@@ -69,8 +73,13 @@ public class JwtUtil {
 
 
     // 토큰 유효성 체크
-    public boolean validateToken(String token){
-        try{
+    public boolean validateToken(String token) {
+        if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {
+            // 맨앞 7글자를 지움 (BEARER_PREFIX 만큼이 딱 7글자)
+            token = token.substring(7);
+        }
+
+        try {
             // Jwts.parseBuilder메서드를 이용해서 JwtParseBuilder인스턴스를 생성
             // JWS 서명 검증을 위해 SecretKey 지정
             // 안전한 JwtPaser를 리턴하기 위해서 JwtPaserBuilder의 build() 메서드 호출
@@ -80,7 +89,7 @@ public class JwtUtil {
             //토큰이 정상으로 유효하면 true 반환
             return true;
 
-        // 각종 문제로 인해서 토큰이 유효하지 않으면 어떤 이유로 유효하지 않은지 log 를찍고 catch 후 false 리턴
+            // 각종 문제로 인해서 토큰이 유효하지 않으면 어떤 이유로 유효하지 않은지 log 를찍고 catch 후 false 리턴
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
@@ -95,31 +104,50 @@ public class JwtUtil {
 
 
     // 유저의 정보를 토큰에서 받아옴
-    public Claims getUserInfoFromToken(String token){
+    public Claims getUserInfoFromToken(String token) {
+        if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {
+            // 맨앞 7글자를 지움 (BEARER_PREFIX 만큼이 딱 7글자)
+            token = token.substring(7);
+        }
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
 
-
     // 토큰을 새로 만들때
-    public String createToken (String username){
+    public String createToken(User user) {
         Date date = new Date();
 
         // 토큰 만료시간 1시간
         long TOKEN_TIME = 60 * 60 * 1000;
 
+        Claims claims = Jwts.claims().setSubject(user.getEmail());
+        claims.put("userId", user.getUserId());
+        claims.put("name", user.getName());
+        claims.put("role", user.getRole());
+        claims.put("address", user.getAddress());
 
         return BEARER_PREFIX + Jwts.builder()
-            // 이후 JWT로 인증할 식별자를 username 으로 지정
-            .setSubject(username)
             // 현재 시간으로 부터 TOKEN_TIME (1시간) 만큼의 만료시간 지정
-            .setExpiration(new Date(date.getTime()+TOKEN_TIME))
+            .setExpiration(new Date(date.getTime() + TOKEN_TIME))
             // JWT를 발급한 시간
             .setIssuedAt(date)
             // 개인 키를 가지고 HS256 암호화 알고리즘으로 Header 와 Signature 생성
-            .signWith(key,signatureAlgorithm)
+            .signWith(key, signatureAlgorithm)
+            .setClaims(claims)
             .compact();
+
+        // setClaims() : JWT 에 포함시킬 Custom Claims 를 추가 (주로 인증된 사용자 정보)
+        // setSubject() : JWT 에 대한 제목
+        // setIssuedAt() : JWT 발행 일자 . 파라미터 타입은 java.util.Date
+        // setExpiration() : JWT 만료기한 지정 . 파라미터 타입은 java.util.Date
+        // signWith() : 서명을 위한 Key (java.security.Key) 객체를 설정
+        // compact() : JWT 생성하고 직렬화.
+
     }
 
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 24a303a9f7697e84e7594977cd3d4f57d2728d80

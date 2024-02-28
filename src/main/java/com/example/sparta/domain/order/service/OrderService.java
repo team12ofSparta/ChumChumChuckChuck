@@ -1,5 +1,7 @@
 package com.example.sparta.domain.order.service;
 
+import com.example.sparta.domain.order.dto.CreateOrderRequestDto;
+import com.example.sparta.domain.order.dto.ModifyOrderRequestDto;
 import com.example.sparta.domain.order.dto.OrderResponseDto;
 import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.order.repository.OrderRepository;
@@ -22,9 +24,12 @@ public class OrderService {
     private final OrderDetailRepository orderDetailRepository;
 
     @Transactional
-    public OrderResponseDto createOrder(String requests, User user) {
-        Long totalPrice = 0L;
+    public OrderResponseDto createOrder(CreateOrderRequestDto requestDto, User user) {
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByUserAndOrder(user, null);
+        if(orderDetailList.isEmpty()){
+            throw new IllegalArgumentException("주문 실패 : 주문할 메뉴를 골라주세요.");
+        }
+        Long totalPrice = 0L;
         List<Long> orderDetailIdList = new ArrayList<>();
         List<String> menuNameList = new ArrayList<>();
         List<Integer> menuQuantityList = new ArrayList<>();
@@ -35,7 +40,7 @@ public class OrderService {
             menuNameList.add(orderDetail.getMenu().getName());
             menuQuantityList.add(orderDetail.getQuantity());
         }
-        Order order = new Order(totalPrice, requests, 0, user, store);
+        Order order = new Order(totalPrice, requestDto.getRequests(), 0, user, store);
         Order savedOrder = orderRepository.save(order);
 
         for (OrderDetail orderDetail : orderDetailList) { //orderDetail 에 주문 넣어주기
@@ -47,6 +52,9 @@ public class OrderService {
     public OrderResponseDto getOrder(User user, Long orderId) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문번호입니다."));
+        if(!user.getUserId().equals(order.getUser().getUserId())){
+            throw new IllegalArgumentException("주문 조회 권한이 없습니다.");
+        }
         return orderResponseDtoMaker(order);
     }
 
@@ -63,6 +71,7 @@ public class OrderService {
     }
 
     private OrderResponseDto orderResponseDtoMaker(Order order) {
+
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
         List<Long> orderDetailIdList = new ArrayList<>();
         List<String> menuNameList = new ArrayList<>();
@@ -74,4 +83,27 @@ public class OrderService {
         }
         return new OrderResponseDto(order, orderDetailIdList, menuNameList, menuQuantityList);
     }
+
+    public Long deleteOrder(User user, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+        if (!order.getUser().getUserId().equals(user.getUserId())) {
+            throw new IllegalArgumentException("주문 삭제 권한이 없습니다.");
+        }
+        orderRepository.delete(order);
+        return order.getOrderId();
+    }
+
+    @Transactional
+    public OrderResponseDto modifyOrderRequest(User user, Long orderId,
+        ModifyOrderRequestDto modifyOrderRequestDto) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+        if (!user.getUserId().equals(order.getUser().getUserId())) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
+        order.setRequests(modifyOrderRequestDto.getRequests());
+        return orderResponseDtoMaker(order);
+    }
+
 }

@@ -8,8 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserDetailsImpl implements UserDetails {
 
-
-
     private final User user;
 
     public User getUser() {
