@@ -2,8 +2,10 @@ package com.example.sparta.domain.user.service;
 
 
 import com.example.sparta.domain.user.dto.UserLoginRequestDto;
+import com.example.sparta.domain.user.dto.UserLoginResponseDto;
 import com.example.sparta.domain.user.dto.UserPasswordUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateRequestDto;
+import com.example.sparta.domain.user.dto.UserProfileUpdateResponseDto;
 import com.example.sparta.domain.user.dto.UserSignupRequestDto;
 import com.example.sparta.domain.user.dto.UserSignupResponseDto;
 import com.example.sparta.domain.user.entity.User;
@@ -72,13 +74,19 @@ public class UserService {
     }
 
     @Transactional
-    public void userProfileUpdate(UserProfileUpdateRequestDto userProfileUpdateRequestDto,
+    public UserProfileUpdateResponseDto userProfileUpdate(UserProfileUpdateRequestDto userProfileUpdateRequestDto,
         User user) {
         String email = user.getEmail();
         User userUp = userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("로그인 유저 정보가 없습니다."));
 
         userUp.userUpdate(userProfileUpdateRequestDto);
+        return UserProfileUpdateResponseDto.builder()
+            .name(user.getName())
+            .email(user.getEmail())
+            .address(user.getAddress())
+            .build();
+
     }
 
     @Transactional
