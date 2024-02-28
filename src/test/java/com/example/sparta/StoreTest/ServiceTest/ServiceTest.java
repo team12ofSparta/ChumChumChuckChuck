@@ -53,7 +53,7 @@ public class ServiceTest {
         //service
         StoreService storeService = new StoreService(MockStoreRepository,userRepository);
 
-        // when
+        //when
         given(MockStoreRepository.save(any())).willReturn(score);
 
         //then

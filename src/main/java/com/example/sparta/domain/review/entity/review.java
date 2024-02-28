@@ -47,9 +47,12 @@ public class Review extends Timestamped {
     private Menu menu;
 
     //생성자
-    public Review(ReviewRequestDto reviewRequestDto) {
+    public Review(ReviewRequestDto reviewRequestDto, User user , Store store) {
         this.rating = reviewRequestDto.getRating();
         this.content = reviewRequestDto.getContent();
+        this.user = user;
+        this.store = store;
+        this.menu = menu;
     }
 
     public void updateOne(Integer rating, String content) {

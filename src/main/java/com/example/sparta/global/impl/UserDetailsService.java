@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class UserDetailsService {
 
     private final UserRepository userRepository;
-
     // username 값으로 유저 데이터 베이스에서 해당 값을 찾아와서 UserDetails 를 통해 세부 정보를 저장
     public UserDetails getUserDetails(String username) {
         User user = userRepository.findByName(username)

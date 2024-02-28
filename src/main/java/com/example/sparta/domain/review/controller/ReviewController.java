@@ -38,7 +38,6 @@ public class ReviewController {
 
         return ResponseEntity.ok().body(ResponseDto.
             <List<ReviewResponseDto>>builder()
-            .message("리뷰 전체 조회 완료")
             .statusCode(HttpStatus.OK.value())
             .data(all)
             .build());
@@ -51,22 +50,22 @@ public class ReviewController {
 
         return ResponseEntity.ok().body(ResponseDto.
             <ReviewResponseDto>builder()
-            .message("리뷰 선택 조회 완료")
             .statusCode(HttpStatus.OK.value())
             .data(reviewResponseDto)
             .build());
     }
 
     //리뷰수정
+    //유저검증하기 위해 userDetails에 유저를 반환하여 검증
     @PutMapping("/{reviewId}")
     public ResponseEntity<ResponseDto<ReviewResponseDto>> updateReview(@PathVariable Long reviewId,
-        @RequestBody ReviewRequestDto reviewRequestDto) {
-        ReviewResponseDto reviewResponseDto = reviewService.updateOne(reviewId, reviewRequestDto);
+        @RequestBody ReviewRequestDto reviewRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        ReviewResponseDto reviewResponseDto = reviewService.updateOne(reviewId, reviewRequestDto, userDetails.getUser());
+
 
         return ResponseEntity.ok()
             .body(ResponseDto.
                 <ReviewResponseDto>builder()
-                .message("리뷰 수정 완료")
                 .statusCode(HttpStatus.OK.value())
                 .data(reviewResponseDto)
                 .build());
@@ -75,13 +74,12 @@ public class ReviewController {
     //리뷰 등록
     @PostMapping
     public ResponseEntity<ResponseDto<ReviewResponseDto>> registerReview(
-        @RequestBody ReviewRequestDto reviewRequestDto) {
-        ReviewResponseDto register = reviewService.register(reviewRequestDto);
+        @RequestBody ReviewRequestDto reviewRequestDto, UserDetailsImpl userDetails) {
+        ReviewResponseDto register = reviewService.register(reviewRequestDto, userDetails.getUser());
 
         return ResponseEntity.ok()
             .body(ResponseDto.
                 <ReviewResponseDto>builder()
-                .message("리뷰 등록 완료")
                 .statusCode(HttpStatus.OK.value())
                 .data(register)
                 .build());
@@ -90,13 +88,12 @@ public class ReviewController {
     //리뷰 삭제
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<ResponseDto<ReviewResponseDto>> deleteReview(
-        @PathVariable Long reviewId) {
-        reviewService.deleteOne(reviewId);
+        @PathVariable Long reviewId, UserDetailsImpl userDetails) {
+        reviewService.deleteOne(reviewId, userDetails.getUser());
 
         return ResponseEntity.ok()
             .body(ResponseDto.
                 <ReviewResponseDto>builder()
-                .message("리뷰 삭제 완료")
                 .statusCode(HttpStatus.OK.value())
                 .data(null)
                 .build());
