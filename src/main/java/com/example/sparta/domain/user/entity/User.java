@@ -61,12 +61,11 @@ public class User extends Timestamped {
         this.role = role;
         this.kakaoId = kakaoId;
     }
-    public User(String name, String password, String email, String address, UserRoleEnum role) {
+    public User(String name, String password, String email, String address) {
         this.name = name;
         this.password = password;
         this.email = email;
         this.address = address;
-        this.role = role;
     }
 
     public void userUpdate(UserProfileUpdateRequestDto userProfileReworkRequestDto) {
