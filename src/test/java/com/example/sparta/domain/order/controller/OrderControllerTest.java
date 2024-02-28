@@ -3,6 +3,7 @@ package com.example.sparta.domain.order.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -218,5 +219,65 @@ class OrderControllerTest {
             //then
             action.andDo(print()).andExpect(status().isBadRequest());
         }
+    }
+    @Nested
+    @DisplayName("주문 조회")
+    @WithMockUser
+    class getOrder{
+        @Nested
+        @DisplayName("단건 조회")
+        class singleOrder{
+            @Test
+            @DisplayName("- 성공")
+            void getSingleOrder_success() throws Exception{
+                //given
+                Order order = new Order();
+                Store store = new Store();
+
+                order.setUser(testUser);
+                order.setStore(store);
+                OrderResponseDto orderResponseDto = new OrderResponseDto(
+                    order, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
+                );
+                given(orderService.getOrder(any(User.class), any(Long.class))).willReturn(orderResponseDto);
+
+                //when
+                ResultActions action = mockMvc.perform(
+                    get("/orders/1")
+                );
+
+                //then
+                action.andDo(print()).andExpect(status().isOk());
+            }
+            @Test
+            @DisplayName("- 실패")
+            void getSingleOrder_fail() throws Exception{
+                //given
+                Order order = new Order();
+                Store store = new Store();
+
+                order.setUser(testUser);
+                order.setStore(store);
+
+                given(orderService.getOrder(any(User.class), any(Long.class))).willThrow(new IllegalArgumentException());
+
+                //when
+                ResultActions action = mockMvc.perform(
+                    get("/orders/1")
+                );
+
+                //then
+                action.andDo(print()).andExpect(status().isBadRequest());
+            }
+        }
+//        @Nested
+//        @DisplayName("목록 조회")
+//        class listOfOrders{
+//            @Test
+//            @DisplayName("- 성공")
+//            void getListOfOrder_success(){
+//
+//            }
+//        }
     }
 }
