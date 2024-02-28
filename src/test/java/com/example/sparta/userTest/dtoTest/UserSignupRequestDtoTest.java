@@ -1,7 +1,5 @@
 package com.example.sparta.userTest.dtoTest;
 
-import com.example.sparta.domain.user.dto.UserPasswordUpdateRequestDto;
-import com.example.sparta.domain.user.dto.UserProfileUpdateResponseDto;
 import com.example.sparta.domain.user.dto.UserSignupRequestDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -35,7 +33,7 @@ public class UserSignupRequestDtoTest {
         String address = "테스트 주소";
         //when
         UserSignupRequestDto userSignupRequestDto = new UserSignupRequestDto(
-            name,password, email, address);
+            name, password, email, address);
 
         //then
         Assertions.assertEquals(name, userSignupRequestDto.getName());
@@ -55,7 +53,7 @@ public class UserSignupRequestDtoTest {
         String address = "테스트 주소";
         //when
         UserSignupRequestDto userSignupRequestDto = new UserSignupRequestDto(
-            name,password, email, address);
+            name, password, email, address);
 
         //then
         Set<ConstraintViolation<UserSignupRequestDto>> violations = validator.validate(
