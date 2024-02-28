@@ -10,8 +10,5 @@ public class GetOrderDetailResponseDto {
 
     private Long storeId;
     private String storeName;
-    private List<Long> menuIdList;
-    private List<String> menuNameList;
-    private List<Long> menuPriceList;
-    private List<Integer> quantityList;
+    private List<GetOrderDetailMenuResponseDto> orderDetailMenuResponseDtoList;
 }
