@@ -65,8 +65,8 @@ public class UserService {
 
     @Transactional
     public void userProfileUpdate(UserProfileUpdateRequestDto userProfileUpdateRequestDto,
-        String jwtToken) {
-        String email = jwtUtil.getUserInfoFromToken(jwtToken).getSubject();
+        User user) {
+        String email = user.getEmail();
         User userUp = userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("로그인 유저 정보가 없습니다."));
 
@@ -75,8 +75,8 @@ public class UserService {
 
     @Transactional
     public void userPasswordUpdate(UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
-        String jwtToken, User user) {
-        String email = jwtUtil.getUserInfoFromToken(jwtToken).getSubject();
+        User user) {
+        String email = user.getEmail();
         String password = user.getPassword();
         User userUp = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
