@@ -18,5 +18,14 @@ public class ReviewExceptionHandler {
         return new ResponseEntity<>(exceptionDto,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<ExceptionDto> handleException(NullPointerException e){
+        ExceptionDto exceptionDto = ExceptionDto.builder()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .state(HttpStatus.BAD_REQUEST)
+            .message(e.getMessage())
+            .build();
+        return new ResponseEntity<>(exceptionDto,HttpStatus.BAD_REQUEST);
+    }
 
 }
