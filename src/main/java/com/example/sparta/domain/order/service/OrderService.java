@@ -32,7 +32,7 @@ public class OrderService {
         }
 
         Long totalPrice = 0L;
-        List<OrderDetailResponseBucket> orderDetailResponseBucketList = new ArrayList<>();
+        List<OrderDetailResponseBucket> responseBucketList = new ArrayList<>();
         for (OrderDetail orderDetail : orderDetailList) {
             totalPrice += orderDetail.getMenu().getPrice() * orderDetail.getQuantity();
             OrderDetailResponseBucket orderDetailResponseBucket = OrderDetailResponseBucket.builder()
@@ -41,17 +41,16 @@ public class OrderService {
                 .menuName(orderDetail.getMenu().getName())
                 .menuQuantity(orderDetail.getQuantity())
                 .build();
-            orderDetailResponseBucketList.add(orderDetailResponseBucket);
+            responseBucketList.add(orderDetailResponseBucket);
         }
 
         Store store = orderDetailList.get(0).getStore();
         Order order = new Order(totalPrice, requestDto.getRequests(), 0, user, store);
         Order savedOrder = orderRepository.save(order);
-
         for (OrderDetail orderDetail : orderDetailList) { //orderDetail 에 주문 넣어주기
             orderDetail.setOrder(savedOrder);
         }
-        return new OrderResponseDto(savedOrder, orderDetailIdList, menuNameList, menuQuantityList);
+        return new OrderResponseDto(savedOrder, responseBucketList);
     }
 
     public OrderResponseDto getOrder(User user, Long orderId) {
@@ -76,17 +75,18 @@ public class OrderService {
     }
 
     private OrderResponseDto orderResponseDtoMaker(Order order) {
-
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
-        List<Long> orderDetailIdList = new ArrayList<>();
-        List<String> menuNameList = new ArrayList<>();
-        List<Integer> menuQuantityList = new ArrayList<>();
+        List<OrderDetailResponseBucket> responseBucketList = new ArrayList<>();
         for (OrderDetail orderDetail : orderDetailList) {
-            orderDetailIdList.add(orderDetail.getOrderDetailId());
-            menuNameList.add(orderDetail.getMenu().getName());
-            menuQuantityList.add(orderDetail.getQuantity());
+            OrderDetailResponseBucket orderDetailResponseBucket = OrderDetailResponseBucket.builder()
+                .orderDetailId(orderDetail.getOrderDetailId())
+                .menuId(orderDetail.getMenu().getMenuId())
+                .menuName(orderDetail.getMenu().getName())
+                .menuQuantity(orderDetail.getQuantity())
+                .build();
+            responseBucketList.add(orderDetailResponseBucket);
         }
-        return new OrderResponseDto(order, orderDetailIdList, menuNameList, menuQuantityList);
+        return new OrderResponseDto(order, responseBucketList);
     }
 
     public Long deleteOrder(User user, Long orderId) {
