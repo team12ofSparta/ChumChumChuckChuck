@@ -44,7 +44,7 @@ public class UserController {
     // 회원 가입 하기
     @PostMapping("/signup")
     @ResponseBody
-    public ResponseEntity<ResponseDto<Void>> usersSignup(
+    public ResponseEntity<ResponseDto<Void>> userSignup(
         @Valid @RequestBody UserSignupRequestDto userSignupRequestDto) {
         userService.userSignup(userSignupRequestDto);
         return ResponseEntity.status(201).body(ResponseDto.
