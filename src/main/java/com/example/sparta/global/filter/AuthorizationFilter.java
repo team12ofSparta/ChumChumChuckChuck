@@ -43,14 +43,14 @@ public class AuthorizationFilter extends
                 // 토큰에서 유저정보를 받아와서 info에 넣음
                 Claims info = jwtUtil.getUserInfoFromToken(token);
 
-                // info 에서 유저네임을 뽑아와서 저장
-                String username = info.getSubject();
+                // info 에서 이메일 을 뽑아와서 저장
+                String email = info.getSubject();
 
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 // Authentication (인증된 정보) 를 담고 있는 Holder
                 // SecurityContextHolder 가 가진 값을 통해 인증이 되었나 확인할 수있음.
 
-                UserDetails userDetails = userDetailsService.getUserDetails(username);
+                UserDetails userDetails = userDetailsService.getUserDetails(email);
                 //userDetails 에 유저의 상세 정보를 넣음
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails,
@@ -78,6 +78,8 @@ public class AuthorizationFilter extends
                 // 더 필터를 타지 않고 에러응답을 리턴시킴
             }
         }
+
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
 
 
     }
