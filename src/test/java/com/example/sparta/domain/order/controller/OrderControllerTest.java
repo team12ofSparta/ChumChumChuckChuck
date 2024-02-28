@@ -85,7 +85,7 @@ class OrderControllerTest {
             //given
             CreateOrderRequestDto requestDto = new CreateOrderRequestDto("test request");
             OrderResponseDto orderResponseDto = new OrderResponseDto(
-                order, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
+                order, new ArrayList<>()
             );
             given(orderService.createOrder(any(CreateOrderRequestDto.class),
                 any(User.class))).willReturn(orderResponseDto);
@@ -173,7 +173,7 @@ class OrderControllerTest {
         void modifyOrderRequest_success() throws Exception {
             //given
             OrderResponseDto orderResponseDto = new OrderResponseDto(
-                order, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
+                order, new ArrayList<>()
             );
             given(orderService.modifyOrderRequest(any(User.class), any(Long.class),
                 any(ModifyOrderRequestDto.class))).willReturn(orderResponseDto);
@@ -227,7 +227,7 @@ class OrderControllerTest {
             void getSingleOrder_success() throws Exception {
                 //given
                 OrderResponseDto orderResponseDto = new OrderResponseDto(
-                    order, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
+                    order, new ArrayList<>()
                 );
                 given(orderService.getOrder(any(User.class), any(Long.class))).willReturn(
                     orderResponseDto);

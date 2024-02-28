@@ -2,6 +2,7 @@ package com.example.sparta.domain.order.service;
 
 import com.example.sparta.domain.order.dto.CreateOrderRequestDto;
 import com.example.sparta.domain.order.dto.ModifyOrderRequestDto;
+import com.example.sparta.domain.order.dto.OrderDetailResponseBucket;
 import com.example.sparta.domain.order.dto.OrderResponseDto;
 import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.order.repository.OrderRepository;
@@ -26,33 +27,36 @@ public class OrderService {
     @Transactional
     public OrderResponseDto createOrder(CreateOrderRequestDto requestDto, User user) {
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByUserAndOrder(user, null);
-        if(orderDetailList.isEmpty()){
+        if (orderDetailList.isEmpty()) {
             throw new IllegalArgumentException("주문 실패 : 주문할 메뉴를 골라주세요.");
         }
+
         Long totalPrice = 0L;
-        List<Long> orderDetailIdList = new ArrayList<>();
-        List<String> menuNameList = new ArrayList<>();
-        List<Integer> menuQuantityList = new ArrayList<>();
-        Store store = orderDetailList.get(0).getStore();
+        List<OrderDetailResponseBucket> responseBucketList = new ArrayList<>();
         for (OrderDetail orderDetail : orderDetailList) {
             totalPrice += orderDetail.getMenu().getPrice() * orderDetail.getQuantity();
-            orderDetailIdList.add(orderDetail.getOrderDetailId());
-            menuNameList.add(orderDetail.getMenu().getName());
-            menuQuantityList.add(orderDetail.getQuantity());
+            OrderDetailResponseBucket orderDetailResponseBucket = OrderDetailResponseBucket.builder()
+                .orderDetailId(orderDetail.getOrderDetailId())
+                .menuId(orderDetail.getMenu().getMenuId())
+                .menuName(orderDetail.getMenu().getName())
+                .menuQuantity(orderDetail.getQuantity())
+                .build();
+            responseBucketList.add(orderDetailResponseBucket);
         }
+
+        Store store = orderDetailList.get(0).getStore();
         Order order = new Order(totalPrice, requestDto.getRequests(), 0, user, store);
         Order savedOrder = orderRepository.save(order);
-
         for (OrderDetail orderDetail : orderDetailList) { //orderDetail 에 주문 넣어주기
             orderDetail.setOrder(savedOrder);
         }
-        return new OrderResponseDto(savedOrder, orderDetailIdList, menuNameList, menuQuantityList);
+        return new OrderResponseDto(savedOrder, responseBucketList);
     }
 
     public OrderResponseDto getOrder(User user, Long orderId) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문번호입니다."));
-        if(!user.getUserId().equals(order.getUser().getUserId())){
+        if (!user.getUserId().equals(order.getUser().getUserId())) {
             throw new IllegalArgumentException("주문 조회 권한이 없습니다.");
         }
         return orderResponseDtoMaker(order);
@@ -71,17 +75,18 @@ public class OrderService {
     }
 
     private OrderResponseDto orderResponseDtoMaker(Order order) {
-
         List<OrderDetail> orderDetailList = orderDetailRepository.findAllByOrder(order);
-        List<Long> orderDetailIdList = new ArrayList<>();
-        List<String> menuNameList = new ArrayList<>();
-        List<Integer> menuQuantityList = new ArrayList<>();
+        List<OrderDetailResponseBucket> responseBucketList = new ArrayList<>();
         for (OrderDetail orderDetail : orderDetailList) {
-            orderDetailIdList.add(orderDetail.getOrderDetailId());
-            menuNameList.add(orderDetail.getMenu().getName());
-            menuQuantityList.add(orderDetail.getQuantity());
+            OrderDetailResponseBucket orderDetailResponseBucket = OrderDetailResponseBucket.builder()
+                .orderDetailId(orderDetail.getOrderDetailId())
+                .menuId(orderDetail.getMenu().getMenuId())
+                .menuName(orderDetail.getMenu().getName())
+                .menuQuantity(orderDetail.getQuantity())
+                .build();
+            responseBucketList.add(orderDetailResponseBucket);
         }
-        return new OrderResponseDto(order, orderDetailIdList, menuNameList, menuQuantityList);
+        return new OrderResponseDto(order, responseBucketList);
     }
 
     public Long deleteOrder(User user, Long orderId) {
