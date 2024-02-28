@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DibsController {
   private final DibsService dibsServices;
 
-  @PostMapping("{storeId}/store")
+  @PostMapping("/store/{storeId}")
   public ResponseEntity<?> createDibs(@PathVariable(name = "storeId")Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
     try {
       return ResponseEntity.status(HttpStatus.CREATED)
@@ -40,7 +40,7 @@ public class DibsController {
     }
   }
 //
-@DeleteMapping("{storeId}/store")
+@DeleteMapping("/store/{storeId}")
 public ResponseEntity<?> deleteDibs(@PathVariable(name = "storeId")Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
   try {
     return ResponseEntity.status(HttpStatus.OK)

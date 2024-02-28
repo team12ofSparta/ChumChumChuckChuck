@@ -70,7 +70,7 @@ public class DibsControllerTest {
     this.mockUserSetup();
 
     // when - then
-    this.mvc.perform(post("/dibs/1/store")
+    this.mvc.perform(post("/dibs/store/1")
             .principal(mockPrincipal)
         )
         .andExpect(status().is(201))
@@ -84,7 +84,7 @@ public class DibsControllerTest {
     this.mockUserSetup();
 
     // when - then
-    this.mvc.perform(delete("/dibs/1/store")
+    this.mvc.perform(delete("/dibs/store/1")
             .principal(mockPrincipal)
         )
         .andExpect(status().is(200))
