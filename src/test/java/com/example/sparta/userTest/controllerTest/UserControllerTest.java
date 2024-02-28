@@ -55,7 +55,7 @@ public class UserControllerTest {
 
         //when
 
-        ResponseEntity<ResponseDto<Void>> response = userController.usersSignup(
+        ResponseEntity<ResponseDto<Void>> response = userController.userSignup(
             userSignupRequestDto);
         //then
         Assertions.assertNotNull(response);
