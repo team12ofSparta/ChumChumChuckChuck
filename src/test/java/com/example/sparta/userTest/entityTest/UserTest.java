@@ -10,7 +10,7 @@ public class UserTest {
 
     @Test
     @DisplayName("User Entity 테스트")
-    void UesrTest() {
+    void UserTest() {
         //given
         String name = "테스터";
         String password = "test1234";
