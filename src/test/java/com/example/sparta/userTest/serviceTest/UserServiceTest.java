@@ -30,7 +30,7 @@ public class UserServiceTest {
     private UserService userService;
     @Mock
     private UserRepository userRepository;
-
+    @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
     private JwtUtil jwtUtil;
