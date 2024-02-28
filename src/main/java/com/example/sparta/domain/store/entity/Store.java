@@ -1,10 +1,13 @@
 package com.example.sparta.domain.store.entity;
 
+import com.example.sparta.domain.store.dto.CreateStoreRequestDto;
+import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.entity.Timestamped;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
+import java.time.LocalTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +25,7 @@ public class Store extends Timestamped {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "user_id")
     private User owner;
 
     @Column(nullable = false)
@@ -46,6 +49,14 @@ public class Store extends Timestamped {
     @Column
     private String deliveryAddress;
 
+    @Column
+    private StoreStatus status;
+
+    @Column
+    private LocalTime openingTime;
+    @Column
+    private LocalTime closingTime;
+
     public Store(StoreRequestDto requestDto,User user){
         name = requestDto.getName();
         owner = user;
@@ -56,6 +67,21 @@ public class Store extends Timestamped {
         dibsCount = requestDto.getDibsCount();
         reviewCount = requestDto.getReviewCount();
         deliveryAddress = requestDto.getDeliveryAddress();
+
+        status = StoreStatus.PREPARING;
+    }
+    public Store(CreateStoreRequestDto requestDto,User user){
+        name = requestDto.getName();
+        owner = user;
+        category = requestDto.getCategory();
+        address = requestDto.getAddress();
+        content = requestDto.getContent();
+        rating = 0f;
+        dibsCount = 0;
+        reviewCount = 0;
+        deliveryAddress = requestDto.getDeliveryAddress();
+
+        status = StoreStatus.PREPARING;
     }
     @Transactional
     public void update(StoreRequestDto requestDto) {
@@ -68,4 +94,26 @@ public class Store extends Timestamped {
         reviewCount = requestDto.getReviewCount();
         deliveryAddress = requestDto.getDeliveryAddress();
     }
+    @Transactional
+    public void openStore(boolean b){
+        this.status = b?StoreStatus.RUNNING:StoreStatus.CLOSED;
+    }
+    @Transactional
+    public void setOpeningHours(OpeningHoursDto dto){
+        this.openingTime = dto.getOpening();
+        this.closingTime = dto.getClosing();
+    }
+    // 관리자 권한
+    @Transactional
+    public void updateStatus(int input){
+        switch (input) {
+            case 1 -> this.status = StoreStatus.PREPARING;
+            case 2 -> this.status = StoreStatus.RUNNING;
+            case 3 -> this.status = StoreStatus.CLOSED;
+            case 4 -> this.status = StoreStatus.TEMPORARY_BANDED;
+            case 5 -> this.status = StoreStatus.PERMANENT_BANNED;
+            default -> throw new IllegalArgumentException("잘못된 입력 코드 store updateStatus() 1~5 까지만 가능");
+        }
+    }
+
 }

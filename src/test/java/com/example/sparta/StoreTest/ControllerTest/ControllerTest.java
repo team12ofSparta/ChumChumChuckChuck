@@ -1,7 +1,9 @@
-package com.example.sparta.StoreTest.controllerTest;
+package com.example.sparta.storeTest.controllerTest;
 
 
 import com.example.sparta.domain.store.controller.StoreController;
+import com.example.sparta.domain.store.dto.CreateStoreRequestDto;
+import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.store.service.StoreService;
 import com.example.sparta.domain.user.entity.User;
@@ -12,6 +14,7 @@ import com.example.sparta.global.config.WebSecurityConfig;
 import com.example.sparta.global.impl.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,18 +68,15 @@ public class ControllerTest {
     }
     //
     @Test
-    @DisplayName("Store post")
+    @DisplayName("Store Create")
     void test1() throws Exception {
         //given
         this.mockUserSetup();
-        StoreRequestDto requestDto= new StoreRequestDto();
+        CreateStoreRequestDto requestDto= new CreateStoreRequestDto();
         requestDto.setName("store name");
         requestDto.setCategory("store category");
         requestDto.setAddress("store address");
         requestDto.setContent("store content");
-        requestDto.setRating(4.4f);
-        requestDto.setDibsCount(4);
-        requestDto.setReviewCount(4);
         requestDto.setDeliveryAddress("delivery address");
 
         String postform  = objectMapper.writeValueAsString(requestDto);
@@ -126,7 +126,7 @@ public class ControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .principal(mockPrincipal)
                 )
-                .andExpect(status().is(202))
+                .andExpect(status().is(200))
                 .andDo(print());
     }
     @Test
@@ -136,8 +136,9 @@ public class ControllerTest {
         this.mockUserSetup();
         // when - then
         this.mvc.perform(delete("/stores/1")
+                    .principal(mockPrincipal)
                 )
-                .andExpect(status().is(202))
+                .andExpect(status().is(200))
                 .andDo(print());
     }
 
@@ -158,9 +159,70 @@ public class ControllerTest {
         //given
         this.mockUserSetup();
         // when - then
-        this.mvc.perform(get("/stores?name=sehun")
+        this.mvc.perform(get("/stores/search?name=sehun")
                 )
                 .andExpect(status().is(200))
                 .andDo(print());
     }
+
+
+    //  가계 주인 권한
+    @Test
+    @DisplayName("Open/close the Store!")
+    void test7() throws Exception {
+        //given
+        this.mockUserSetup();
+        // when - then
+        this.mvc.perform(get("/stores/1/open")
+                .principal(mockPrincipal)
+            )
+            .andExpect(status().is(200))
+            .andDo(print());
+    }
+    @Test
+    @DisplayName("close store")
+    void test8() throws Exception{
+        //given
+        this.mockUserSetup();
+        // when - then
+        this.mvc.perform(get("/stores/1/close")
+                .principal(mockPrincipal)
+            )
+            .andExpect(status().is(200))
+            .andDo(print());
+    }
+    @Test
+    @DisplayName("Store 영업시간 생성/수정")
+    void test9() throws Exception {
+        //given
+        this.mockUserSetup();
+        OpeningHoursDto dto = new OpeningHoursDto();
+        dto.setOpening(LocalTime.of(7,0,0));
+        dto.setClosing(LocalTime.MIDNIGHT);
+        String form  = objectMapper.writeValueAsString(dto);
+        // when - then
+        this.mvc.perform(patch("/stores/openinghours/1")
+                .content(form)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .principal(mockPrincipal)
+            )
+            .andExpect(status().is(200))
+            .andDo(print());
+    }
+    // 관리자 권한
+    @Test
+    @DisplayName("ADMINISTRATOR FORCE STATUS")
+    void test10() throws Exception{
+        //given
+        this.mockUserSetup();
+        // when - then
+        this.mvc.perform(get("/stores/1/status/force/4")
+                .principal(mockPrincipal)
+            )
+            .andExpect(status().is(200))
+            .andDo(print());
+    }
+
+
 }

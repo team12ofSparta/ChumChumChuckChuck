@@ -59,8 +59,8 @@ public class WebSecurityConfig {
             authorizeHttpRequests
                 // 접근 허용 설정하기
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/v1/users/login").permitAll() // permitAll() : 접근 허가
-                .requestMatchers("/v1/users/signup").permitAll()
+                .requestMatchers("/users/login").permitAll() // permitAll() : 접근 허가
+                .requestMatchers("/users/signup").permitAll()
                 //anyRequest() : 위 설정 이외 모두
                 .anyRequest().authenticated() // authenticated() : jwt 인증 필요함
         );
