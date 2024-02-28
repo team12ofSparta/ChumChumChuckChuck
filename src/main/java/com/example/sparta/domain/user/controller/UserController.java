@@ -50,7 +50,6 @@ public class UserController {
         return ResponseEntity.status(201).body(ResponseDto.
             <Void>builder()
             .statusCode(HttpStatus.CREATED.value())
-            .message("회원가입 성공")
             .data(null)
             .build()
         );
@@ -65,7 +64,6 @@ public class UserController {
         userService.userLogin(userLoginRequestDto, httpServletResponse);
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
-            .message("로그인 성공")
             .data(null)
             .build()
         );
@@ -81,7 +79,6 @@ public class UserController {
         userService.userLogout(httpServletResponse);
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
-            .message("로그아웃 성공")
             .data(null)
             .build()
         );
@@ -97,7 +94,6 @@ public class UserController {
         userService.userProfileUpdate(userProfileUpdateRequestDto, userDetails.getUser());
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
-            .message("회원정보 수정 성공")
             .data(null)
             .build()
         );
@@ -113,7 +109,6 @@ public class UserController {
         userService.userPasswordUpdate(userPasswordUpdateRequestDto, userDetails.getUser());
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
-            .message("회원정보 수정 성공")
             .data(null)
             .build()
         );
