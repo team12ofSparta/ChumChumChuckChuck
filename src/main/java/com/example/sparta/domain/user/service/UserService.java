@@ -2,7 +2,6 @@ package com.example.sparta.domain.user.service;
 
 
 import com.example.sparta.domain.user.dto.UserLoginRequestDto;
-import com.example.sparta.domain.user.dto.UserLoginResponseDto;
 import com.example.sparta.domain.user.dto.UserPasswordUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateRequestDto;
 import com.example.sparta.domain.user.dto.UserProfileUpdateResponseDto;
@@ -74,7 +73,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserProfileUpdateResponseDto userProfileUpdate(UserProfileUpdateRequestDto userProfileUpdateRequestDto,
+    public UserProfileUpdateResponseDto userProfileUpdate(
+        UserProfileUpdateRequestDto userProfileUpdateRequestDto,
         User user) {
         String email = user.getEmail();
         User userUp = userRepository.findByEmail(email)
