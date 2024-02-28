@@ -52,17 +52,23 @@ class OrderControllerTest {
     @Autowired
     protected ObjectMapper objectMapper;
     User testUser;
+    Order order;
+    Store store;
 
     @BeforeEach
     void setUp() {
+        // 테스트 유저 생성 및 UserDetailsImpl 처리
         testUser = new User();
         testUser.setUserId(1L);
-
         UserDetailsImpl mockUserDetails = new UserDetailsImpl(testUser);
-
         SecurityContextHolder.getContext().setAuthentication(
             new UsernamePasswordAuthenticationToken(mockUserDetails, null, null)
         );
+        // 나머지 변수 초기화
+        order = new Order();
+        store = new Store();
+        order.setStore(store);
+        order.setUser(testUser);
 
         mockMvc = webAppContextSetup(context).build();
     }
@@ -71,23 +77,18 @@ class OrderControllerTest {
     @Nested
     @DisplayName("주문 생성")
     @WithMockUser // Filter 통과 가정
-    class createOrder{
-        @DisplayName("주문 생성 성공")
+    class createOrder {
+
+        @DisplayName("- 성공")
         @Test
         void createOrder_success() throws Exception {
             //given
-            Order order = new Order();
-            Store store = new Store();
-
-            order.setUser(testUser);
-            order.setStore(store);
-
             CreateOrderRequestDto requestDto = new CreateOrderRequestDto("test request");
-
             OrderResponseDto orderResponseDto = new OrderResponseDto(
                 order, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
             );
-            given(orderService.createOrder(any(CreateOrderRequestDto.class), any(User.class))).willReturn(orderResponseDto);
+            given(orderService.createOrder(any(CreateOrderRequestDto.class),
+                any(User.class))).willReturn(orderResponseDto);
 
             //when
             ResultActions action = mockMvc.perform(
@@ -96,21 +97,18 @@ class OrderControllerTest {
                     .accept(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestDto))
             );
+
             //then
             action.andDo(print()).andExpect(status().isCreated());
         }
-        @DisplayName("주문 생성 실패")
+
+        @DisplayName("- 실패")
         @Test
         void createOrder_fail() throws Exception {
             //given
-            Order order = new Order();
-            Store store = new Store();
-
-            order.setUser(testUser);
-            order.setStore(store);
-
             CreateOrderRequestDto requestDto = new CreateOrderRequestDto("test request");
-            given(orderService.createOrder(any(CreateOrderRequestDto.class), any(User.class))).willThrow(new IllegalArgumentException());
+            given(orderService.createOrder(any(CreateOrderRequestDto.class),
+                any(User.class))).willThrow(new IllegalArgumentException());
 
             //when
             ResultActions action = mockMvc.perform(
@@ -119,6 +117,7 @@ class OrderControllerTest {
                     .accept(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestDto))
             );
+
             //then
             action.andDo(print()).andExpect(status().isBadRequest());
         }
@@ -127,66 +126,59 @@ class OrderControllerTest {
     @Nested
     @DisplayName("주문 삭제")
     @WithMockUser
-    class deleteOrder{
+    class deleteOrder {
+
         @Test
-        @DisplayName("주문 삭제 - 성공")
-        void deleteOrder_success() throws Exception{
+        @DisplayName("- 성공")
+        void deleteOrder_success() throws Exception {
             //given
-            Order order = new Order();
-            Store store = new Store();
-
-            order.setUser(testUser);
-            order.setStore(store);
-
             Long orderId = 1L;
             given(orderService.deleteOrder(any(User.class), any(Long.class))).willReturn(orderId);
+
             //when
             ResultActions action = mockMvc.perform(
                 delete("/orders/1")
                     .accept(MediaType.APPLICATION_JSON)
             );
+
             //then
             action.andDo(print()).andExpect(status().isOk());
         }
+
         @Test
-        @DisplayName("주문 삭제 - 실패")
-        void deleteOrder_fail() throws Exception{
+        @DisplayName("- 실패")
+        void deleteOrder_fail() throws Exception {
             //given
-            Order order = new Order();
-            Store store = new Store();
+            given(orderService.deleteOrder(any(User.class), any(Long.class))).willThrow(
+                new IllegalArgumentException());
 
-            order.setUser(testUser);
-            order.setStore(store);
-
-            given(orderService.deleteOrder(any(User.class), any(Long.class))).willThrow(new IllegalArgumentException());
             //when
             ResultActions action = mockMvc.perform(
                 delete("/orders/1")
                     .accept(MediaType.APPLICATION_JSON)
             );
+
             //then
             action.andDo(print()).andExpect(status().isBadRequest());
         }
     }
+
     @Nested
     @DisplayName("주문 요청사항 수정")
     @WithMockUser
-    class modifyOrderRequests{
-        @Test
-        @DisplayName("-성공")
-        void modifyOrderRequest_success() throws Exception{
-            //given
-            Order order = new Order();
-            Store store = new Store();
+    class modifyOrderRequests {
 
-            order.setUser(testUser);
-            order.setStore(store);
+        @Test
+        @DisplayName("- 성공")
+        void modifyOrderRequest_success() throws Exception {
+            //given
             OrderResponseDto orderResponseDto = new OrderResponseDto(
                 order, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
             );
-
-            given(orderService.modifyOrderRequest(any(User.class), any(Long.class),any(ModifyOrderRequestDto.class))).willReturn(orderResponseDto);
+            given(orderService.modifyOrderRequest(any(User.class), any(Long.class),
+                any(ModifyOrderRequestDto.class))).willReturn(orderResponseDto);
             ModifyOrderRequestDto requestDto = new ModifyOrderRequestDto("modify requests.");
+
             //when
             ResultActions action = mockMvc.perform(
                 patch("/orders/1")
@@ -198,18 +190,16 @@ class OrderControllerTest {
             //then
             action.andDo(print()).andExpect(status().isOk());
         }
+
         @Test
-        @DisplayName("-실패")
-        void modifyOrderRequest_fail() throws Exception{
+        @DisplayName("- 실패")
+        void modifyOrderRequest_fail() throws Exception {
             //given
-            Order order = new Order();
-            Store store = new Store();
-
-            order.setUser(testUser);
-            order.setStore(store);
-
-            given(orderService.modifyOrderRequest(any(User.class), any(Long.class),any(ModifyOrderRequestDto.class))).willThrow(new IllegalArgumentException());
+            given(orderService.modifyOrderRequest(any(User.class), any(Long.class),
+                any(ModifyOrderRequestDto.class)))
+                .willThrow(new IllegalArgumentException());
             ModifyOrderRequestDto requestDto = new ModifyOrderRequestDto("modify requests.");
+
             //when
             ResultActions action = mockMvc.perform(
                 patch("/orders/1")
@@ -222,26 +212,25 @@ class OrderControllerTest {
             action.andDo(print()).andExpect(status().isBadRequest());
         }
     }
+
     @Nested
     @DisplayName("주문 조회")
     @WithMockUser
-    class getOrder{
+    class getOrder {
+
         @Nested
         @DisplayName("단건 조회")
-        class singleOrder{
+        class singleOrder {
+
             @Test
             @DisplayName("- 성공")
-            void getSingleOrder_success() throws Exception{
+            void getSingleOrder_success() throws Exception {
                 //given
-                Order order = new Order();
-                Store store = new Store();
-
-                order.setUser(testUser);
-                order.setStore(store);
                 OrderResponseDto orderResponseDto = new OrderResponseDto(
                     order, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()
                 );
-                given(orderService.getOrder(any(User.class), any(Long.class))).willReturn(orderResponseDto);
+                given(orderService.getOrder(any(User.class), any(Long.class))).willReturn(
+                    orderResponseDto);
 
                 //when
                 ResultActions action = mockMvc.perform(
@@ -251,17 +240,13 @@ class OrderControllerTest {
                 //then
                 action.andDo(print()).andExpect(status().isOk());
             }
+
             @Test
             @DisplayName("- 실패")
-            void getSingleOrder_fail() throws Exception{
+            void getSingleOrder_fail() throws Exception {
                 //given
-                Order order = new Order();
-                Store store = new Store();
-
-                order.setUser(testUser);
-                order.setStore(store);
-
-                given(orderService.getOrder(any(User.class), any(Long.class))).willThrow(new IllegalArgumentException());
+                given(orderService.getOrder(any(User.class), any(Long.class))).willThrow(
+                    new IllegalArgumentException());
 
                 //when
                 ResultActions action = mockMvc.perform(
@@ -272,18 +257,15 @@ class OrderControllerTest {
                 action.andDo(print()).andExpect(status().isBadRequest());
             }
         }
+
         @Nested
         @DisplayName("목록 조회")
-        class listOfOrders{
+        class listOfOrders {
+
             @Test
             @DisplayName("- 성공")
-            void getListOfOrder_success() throws Exception{
+            void getListOfOrder_success() throws Exception {
                 //given
-                Order order = new Order();
-                Store store = new Store();
-
-                order.setUser(testUser);
-                order.setStore(store);
                 List<OrderResponseDto> orderResponseDtoList = new ArrayList<>();
                 given(orderService.getOrderList(any(User.class))).willReturn(orderResponseDtoList);
 
@@ -295,17 +277,13 @@ class OrderControllerTest {
                 //then
                 action.andDo(print()).andExpect(status().isOk());
             }
+
             @Test
             @DisplayName("- 실패")
-            void getListOfOrder_fail() throws Exception{
+            void getListOfOrder_fail() throws Exception {
                 //given
-                Order order = new Order();
-                Store store = new Store();
-
-                order.setUser(testUser);
-                order.setStore(store);
-
-                given(orderService.getOrderList(any(User.class))).willThrow(new NoSuchElementException());
+                given(orderService.getOrderList(any(User.class))).willThrow(
+                    new NoSuchElementException());
 
                 //when
                 ResultActions action = mockMvc.perform(
