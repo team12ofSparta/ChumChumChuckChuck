@@ -54,8 +54,10 @@ public class ServiceTest {
         //service
         StoreService storeService = new StoreService(mockStoreRepository);
 
+
         // when
         given(mockStoreRepository.save(any())).willReturn(score);
+
 
         //then
         StoreResponseDto storeResponseDto = storeService.createStore(requestDto,user);

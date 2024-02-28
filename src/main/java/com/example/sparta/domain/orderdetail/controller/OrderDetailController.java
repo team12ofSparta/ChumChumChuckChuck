@@ -39,7 +39,7 @@ public class OrderDetailController {
 
         return ResponseEntity.created(location).body(
             ResponseDto.<OrderDetailResponseDto>builder().statusCode(HttpStatus.CREATED.value())
-                .message("메뉴 담기 완료").data(orderDetailResponseDto).build()
+                .data(orderDetailResponseDto).build()
         );
     }
 
@@ -52,7 +52,7 @@ public class OrderDetailController {
 
         return ResponseEntity.ok()
             .body(ResponseDto.<GetOrderDetailResponseDto>builder().statusCode(HttpStatus.OK.value())
-                .message("현재 주문 상세 조회 완료").data(getOrderDetailResponseDto).build());
+                .data(getOrderDetailResponseDto).build());
     }
 
     @DeleteMapping("/orderDetails/{orderDetailId}")
@@ -74,6 +74,6 @@ public class OrderDetailController {
 
         return ResponseEntity.ok().body(
             ResponseDto.<OrderDetailResponseDto>builder().statusCode(HttpStatus.OK.value())
-                .message("메뉴 수량 수정 완료").data(responseDto).build());
+                .data(responseDto).build());
     }
 }
