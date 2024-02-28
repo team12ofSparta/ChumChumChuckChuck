@@ -69,13 +69,6 @@ public class User extends Timestamped {
         this.address = address;
     }
 
-    public User(String name, String password, String email, String address) {
-        this.name = name;
-        this.password = password;
-        this.email = email;
-        this.address = address;
-    }
-
     public void userUpdate(UserProfileUpdateRequestDto userProfileReworkRequestDto) {
         if(userProfileReworkRequestDto.getName()!=null){
             this.name = userProfileReworkRequestDto.getName();
