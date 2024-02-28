@@ -23,11 +23,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,17 +34,19 @@ public class UserController {
 
     //Service 주입받기
     private final UserService userService;
+    
     //JwtUtil 주입받기
     private final JwtUtil jwtUtil;
     private final KakaoUserService kakaoUserService;
-
 
     // 회원 가입 하기
     @PostMapping("/signup")
     @ResponseBody
     public ResponseEntity<ResponseDto<Void>> userSignup(
         @Valid @RequestBody UserSignupRequestDto userSignupRequestDto) {
+
         userService.userSignup(userSignupRequestDto);
+
         return ResponseEntity.status(201).body(ResponseDto.
             <Void>builder()
             .statusCode(HttpStatus.CREATED.value())
@@ -61,7 +61,9 @@ public class UserController {
     public ResponseEntity<ResponseDto<Void>> userLogin(
         @RequestBody UserLoginRequestDto userLoginRequestDto,
         HttpServletResponse httpServletResponse) {
+
         userService.userLogin(userLoginRequestDto, httpServletResponse);
+
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .data(null)
@@ -71,12 +73,12 @@ public class UserController {
 
 
     //로그아웃 하기
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     @ResponseBody
-    public ResponseEntity<ResponseDto<Void>> userLogout(
-        HttpServletResponse httpServletResponse
-    ) {
+    public ResponseEntity<ResponseDto<Void>> userLogout(HttpServletResponse httpServletResponse) {
+
         userService.userLogout(httpServletResponse);
+
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .data(null)
@@ -89,9 +91,10 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<ResponseDto<Void>> userProfileUpdate(
         @RequestBody UserProfileUpdateRequestDto userProfileUpdateRequestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
         userService.userProfileUpdate(userProfileUpdateRequestDto, userDetails.getUser());
+
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .data(null)
@@ -104,9 +107,10 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<ResponseDto<Void>> userPasswordUpdate(
         @RequestBody UserPasswordUpdateRequestDto userPasswordUpdateRequestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
         userService.userPasswordUpdate(userPasswordUpdateRequestDto, userDetails.getUser());
+
         return ResponseEntity.status(200).body(ResponseDto.<Void>builder()
             .statusCode(HttpStatus.OK.value())
             .data(null)
@@ -114,11 +118,11 @@ public class UserController {
         );
     }
 
-
     // 카카오 로그인
     @GetMapping("/kakao")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse httpServletResponse)
         throws JsonProcessingException {
+
         String token = kakaoUserService.kakaoLogin(code);   // jwt 토큰을 쿠키에 넣어주는 작업 해서 response 에 넣어줌
         Cookie cookie = new Cookie(jwtUtil.AUTHORIZATION_HEADER, token);
         cookie.setPath("/");
@@ -126,6 +130,4 @@ public class UserController {
 
         return "redirect:/";
     }
-
-
 }

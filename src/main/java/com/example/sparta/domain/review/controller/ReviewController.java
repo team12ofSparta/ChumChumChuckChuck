@@ -2,15 +2,10 @@ package com.example.sparta.domain.review.controller;
 
 import com.example.sparta.domain.review.dto.ReviewRequestDto;
 import com.example.sparta.domain.review.dto.ReviewResponseDto;
-import com.example.sparta.domain.review.entity.Review;
 import com.example.sparta.domain.review.service.ReviewService;
 import com.example.sparta.global.dto.ResponseDto;
 import com.example.sparta.global.impl.UserDetailsImpl;
-import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.swing.text.html.parser.Entity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,9 +54,11 @@ public class ReviewController {
     //유저검증하기 위해 userDetails에 유저를 반환하여 검증
     @PutMapping("/{reviewId}")
     public ResponseEntity<ResponseDto<ReviewResponseDto>> updateReview(@PathVariable Long reviewId,
-        @RequestBody ReviewRequestDto reviewRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        ReviewResponseDto reviewResponseDto = reviewService.updateOne(reviewId, reviewRequestDto, userDetails.getUser());
+        @RequestBody ReviewRequestDto reviewRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
+        ReviewResponseDto reviewResponseDto = reviewService.updateOne(reviewId, reviewRequestDto,
+            userDetails.getUser());
 
         return ResponseEntity.ok()
             .body(ResponseDto.
@@ -75,7 +72,9 @@ public class ReviewController {
     @PostMapping
     public ResponseEntity<ResponseDto<ReviewResponseDto>> registerReview(
         @RequestBody ReviewRequestDto reviewRequestDto, UserDetailsImpl userDetails) {
-        ReviewResponseDto register = reviewService.register(reviewRequestDto, userDetails.getUser());
+
+        ReviewResponseDto register = reviewService.register(reviewRequestDto,
+            userDetails.getUser());
 
         return ResponseEntity.ok()
             .body(ResponseDto.
@@ -89,6 +88,7 @@ public class ReviewController {
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<ResponseDto<ReviewResponseDto>> deleteReview(
         @PathVariable Long reviewId, UserDetailsImpl userDetails) {
+
         reviewService.deleteOne(reviewId, userDetails.getUser());
 
         return ResponseEntity.ok()
