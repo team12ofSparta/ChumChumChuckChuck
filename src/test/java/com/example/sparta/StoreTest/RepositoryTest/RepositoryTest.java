@@ -106,6 +106,7 @@ public class RepositoryTest {
 
     //delete
         storeRepository.delete(save2);
+        /// 해당 dibs 은 지워 졌기 때문에 만약 재 검색을 했을 시에 NoSuchElementException 발동
         try{
             storeRepository.findById(1L).orElseThrow(()-> new NoSuchElementException("해당 스토어 없음"));
         }catch (NoSuchElementException e){

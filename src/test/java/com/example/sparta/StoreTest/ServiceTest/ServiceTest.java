@@ -49,20 +49,20 @@ public class ServiceTest {
         user.setName("스탄이");
 
         //score
-        Store score = new Store(requestDto,user);
+        Store store = new Store(requestDto,user);
 
         //service
         StoreService storeService = new StoreService(mockStoreRepository);
 
 
         // when
-        given(mockStoreRepository.save(any())).willReturn(score);
+        given(mockStoreRepository.save(any())).willReturn(store);
 
 
         //then
         StoreResponseDto storeResponseDto = storeService.createStore(requestDto,user);
 
-        assertEquals(score.getName(),storeResponseDto.getName());
+        assertEquals(store.getName(),storeResponseDto.getName());
     }
 
     @Test
