@@ -1,7 +1,7 @@
 package com.example.sparta.global.config;
 
 import com.example.sparta.global.filter.AuthorizationFilter;
-import com.example.sparta.global.impl.UserDetailsService;
+import com.example.sparta.global.impl.UserDetailsServiceImpl;
 import com.example.sparta.global.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,13 +21,13 @@ public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
 
     //  Filter 한바퀴 돌림
     @Bean
     public AuthorizationFilter authorizationFilter() {
-        return new AuthorizationFilter(jwtUtil, objectMapper, userDetailsService);
+        return new AuthorizationFilter(jwtUtil, objectMapper, userDetailsServiceImpl);
     }
 
 

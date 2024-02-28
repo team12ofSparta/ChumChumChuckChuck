@@ -10,11 +10,12 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class OpeningHoursDto {
-  LocalTime opening;
-  LocalTime closing;
 
-  public OpeningHoursDto(Store store) {
-    this.opening = store.getOpeningTime();
-    this.closing = store.getClosingTime();
-  }
+    LocalTime opening;
+    LocalTime closing;
+
+    public OpeningHoursDto(Store store) {
+        this.opening = store.getOpeningTime();
+        this.closing = store.getClosingTime();
+    }
 }

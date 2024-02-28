@@ -1,4 +1,4 @@
-package com.example.sparta.storeTest.controllerTest;
+package com.example.sparta.StoreTest.ControllerTest;
 
 
 import com.example.sparta.domain.store.controller.StoreController;

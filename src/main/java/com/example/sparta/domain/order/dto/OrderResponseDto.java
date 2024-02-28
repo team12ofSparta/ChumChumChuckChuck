@@ -2,12 +2,12 @@ package com.example.sparta.domain.order.dto;
 
 import com.example.sparta.domain.order.entity.Order;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
 @Getter
 public class OrderResponseDto {
+
     private final Long orderId;
     private final Long userId;
     private final Long storeId;

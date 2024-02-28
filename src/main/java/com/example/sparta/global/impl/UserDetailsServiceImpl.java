@@ -4,13 +4,13 @@ import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-
 @RequiredArgsConstructor
 @Service
-public class UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -21,5 +21,10 @@ public class UserDetailsService {
             .orElseThrow(() -> new UsernameNotFoundException("Not Found " + email));
         // username 과 동일한 정보를 찾으면 해당 user 의 각종 값을 담아서 UserDetails 형태로 반환
         return new UserDetailsImpl(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
     }
 }

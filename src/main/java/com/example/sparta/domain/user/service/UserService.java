@@ -23,10 +23,11 @@ public class UserService {
 
     //Repository 주입
     private final UserRepository userRepository;
+
     // 비밀번호 인코더 주입
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
+    private final JwtUtil jwtUtil;
 
     public UserSignupResponseDto userSignup(UserSignupRequestDto userSignupRequestDto) {
         String email = userSignupRequestDto.getEmail();
@@ -86,7 +87,6 @@ public class UserService {
             .email(user.getEmail())
             .address(user.getAddress())
             .build();
-
     }
 
     @Transactional
@@ -113,6 +113,5 @@ public class UserService {
         }
 
         userUp.userPasswordUpdate(userPasswordUpdateRequestDto, passwordEncoder);
-
     }
 }

@@ -7,7 +7,6 @@ import com.example.sparta.domain.menu.entity.Menu;
 import com.example.sparta.domain.menu.repository.MenuRepository;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.store.repository.StoreRepository;
-import com.example.sparta.domain.user.entity.User;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,7 @@ public class MenuService {
             () -> new NoSuchElementException("해당 가게를 찾을 수 없습니다.")
         );
 
-        if (menuRepository.findByMenuNameAndStore(requestDto.getMenuName(), store)) {
+        if (menuRepository.findByMenuNameAndStore(requestDto.getMenuName(), store).isPresent()) {
             throw new IllegalArgumentException("해당 가게에서 메뉴 이름이 이미 존재합니다.");
         }
 

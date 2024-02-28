@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 //Builder
 //@JsonDeserialize(builder=CreateOrderRequestDto.CreateOrderRequestDtoBuilder.class)
 public class CreateOrderRequestDto {
+
     private String requests;
 }

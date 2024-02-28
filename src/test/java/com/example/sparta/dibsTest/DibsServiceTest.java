@@ -21,72 +21,76 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class DibsServiceTest {
-  @Mock
-  DibsRepository mockdibsRepository;
-  @Mock
-  StoreRepository mockStoreRepository;
-  @Test
-  @DisplayName("찜 생성")
-  void test1(){
 
-    //given
-    //스토어 request
-    CreateStoreRequestDto requestDto = new CreateStoreRequestDto();
-    requestDto.setName("service name");
-    requestDto.setCategory("Chicken");
+    @Mock
+    DibsRepository mockdibsRepository;
+    @Mock
+    StoreRepository mockStoreRepository;
 
-    // 유저
-    User user = new User();
-    user.setUserId(1L);
-    user.setAddress("로마");
-    user.setEmail("sparta@iscool.com");
-    user.setName("스탄이");
+    @Test
+    @DisplayName("찜 생성")
+    void test1() {
 
-    //score for given
-    Store store = new Store(requestDto,user);
-    //dips for given
-    Dibs dibs = new Dibs(user,store);
+        //given
+        //스토어 request
+        CreateStoreRequestDto requestDto = new CreateStoreRequestDto();
+        requestDto.setName("service name");
+        requestDto.setCategory("Chicken");
 
-    //when
-    DibsService service = new DibsService(mockStoreRepository,mockdibsRepository);
+        // 유저
+        User user = new User();
+        user.setUserId(1L);
+        user.setAddress("로마");
+        user.setEmail("sparta@iscool.com");
+        user.setName("스탄이");
 
-    given(mockStoreRepository.findById(1L)).willReturn(Optional.of(store));
+        //score for given
+        Store store = new Store(requestDto, user);
+        //dips for given
+        Dibs dibs = new Dibs(user, store);
 
-    DibsResponseDto answer = service.createDibs(1L,user);
+        //when
+        DibsService service = new DibsService(mockStoreRepository, mockdibsRepository);
 
-    //then
-    assertEquals(dibs.getUser(),answer.getUser());
-  }
-  @Test
-  @DisplayName("찜 제거")
-  void test2(){
-    //given
-    //스토어 request
-    CreateStoreRequestDto requestDto = new CreateStoreRequestDto();
-    requestDto.setName("service name");
-    requestDto.setCategory("Chicken");
+        given(mockStoreRepository.findById(1L)).willReturn(Optional.of(store));
 
-    // 유저
-    User user = new User();
-    user.setUserId(1L);
-    user.setAddress("로마");
-    user.setEmail("sparta@iscool.com");
-    user.setName("스탄이");
+        DibsResponseDto answer = service.createDibs(1L, user);
 
-    //score for given
-    Store store = new Store(requestDto,user);
-    //dibs for given
-    Dibs dibs = new Dibs(user,store);
-    //when
-    DibsService service = new DibsService(mockStoreRepository,mockdibsRepository);
+        //then
+        assertEquals(dibs.getUser().getName(), answer.getUserName());
+    }
 
-    given(mockStoreRepository.findById(1L)).willReturn(Optional.of(store));
-    given(mockdibsRepository.findDibsByStoreAndUser(any(),any())).willReturn(Optional.of(dibs));
+    @Test
+    @DisplayName("찜 제거")
+    void test2() {
+        //given
+        //스토어 request
+        CreateStoreRequestDto requestDto = new CreateStoreRequestDto();
+        requestDto.setName("service name");
+        requestDto.setCategory("Chicken");
 
-    Long ans = service.deleteDibs(1L,user);
+        // 유저
+        User user = new User();
+        user.setUserId(1L);
+        user.setAddress("로마");
+        user.setEmail("sparta@iscool.com");
+        user.setName("스탄이");
 
-    //then
-    assertEquals(ans,1L);
+        //score for given
+        Store store = new Store(requestDto, user);
+        //dibs for given
+        Dibs dibs = new Dibs(user, store);
+        //when
+        DibsService service = new DibsService(mockStoreRepository, mockdibsRepository);
 
-  }
+        given(mockStoreRepository.findById(1L)).willReturn(Optional.of(store));
+        given(mockdibsRepository.findDibsByStoreAndUser(any(), any())).willReturn(
+            Optional.of(dibs));
+
+        Long ans = service.deleteDibs(1L, user);
+
+        //then
+        assertEquals(ans, 1L);
+
+    }
 }

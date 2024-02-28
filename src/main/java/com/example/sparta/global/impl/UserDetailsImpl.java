@@ -2,7 +2,6 @@ package com.example.sparta.global.impl;
 
 import com.example.sparta.domain.user.entity.User;
 import java.util.Collection;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

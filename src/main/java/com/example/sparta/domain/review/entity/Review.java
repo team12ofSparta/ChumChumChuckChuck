@@ -1,6 +1,6 @@
 package com.example.sparta.domain.review.entity;
 
-import com.example.sparta.domain.menu.entity.Menu;
+import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.review.dto.ReviewRequestDto;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
@@ -16,7 +16,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -42,17 +41,17 @@ public class Review extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Store store;
 
-    @JoinColumn(name = "menu_id")
+    @JoinColumn(name = "order_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Menu menu;
+    private Order order;
 
     //생성자
-    public Review(ReviewRequestDto reviewRequestDto, User user , Store store) {
+    public Review(ReviewRequestDto reviewRequestDto, User user, Store store, Order order) {
         this.rating = reviewRequestDto.getRating();
         this.content = reviewRequestDto.getContent();
         this.user = user;
         this.store = store;
-        this.menu = menu;
+        this.order = order;
     }
 
     public void updateOne(Integer rating, String content) {

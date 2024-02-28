@@ -5,7 +5,14 @@ import com.example.sparta.domain.store.dto.OpeningHoursDto;
 import com.example.sparta.domain.store.dto.StoreRequestDto;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.entity.Timestamped;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import java.time.LocalTime;
 import lombok.Getter;
@@ -57,7 +64,7 @@ public class Store extends Timestamped {
     @Column
     private LocalTime closingTime;
 
-    public Store(StoreRequestDto requestDto,User user){
+    public Store(StoreRequestDto requestDto, User user) {
         name = requestDto.getName();
         owner = user;
         category = requestDto.getCategory();
@@ -70,7 +77,8 @@ public class Store extends Timestamped {
 
         status = StoreStatus.PREPARING;
     }
-    public Store(CreateStoreRequestDto requestDto,User user){
+
+    public Store(CreateStoreRequestDto requestDto, User user) {
         name = requestDto.getName();
         owner = user;
         category = requestDto.getCategory();
@@ -83,6 +91,7 @@ public class Store extends Timestamped {
 
         status = StoreStatus.PREPARING;
     }
+
     @Transactional
     public void update(StoreRequestDto requestDto) {
         name = requestDto.getName();
@@ -94,25 +103,29 @@ public class Store extends Timestamped {
         reviewCount = requestDto.getReviewCount();
         deliveryAddress = requestDto.getDeliveryAddress();
     }
+
     @Transactional
-    public void openStore(boolean b){
-        this.status = b?StoreStatus.RUNNING:StoreStatus.CLOSED;
+    public void openStore(boolean b) {
+        this.status = b ? StoreStatus.RUNNING : StoreStatus.CLOSED;
     }
+
     @Transactional
-    public void setOpeningHours(OpeningHoursDto dto){
+    public void setOpeningHours(OpeningHoursDto dto) {
         this.openingTime = dto.getOpening();
         this.closingTime = dto.getClosing();
     }
+
     // 관리자 권한
     @Transactional
-    public void updateStatus(int input){
+    public void updateStatus(int input) {
         switch (input) {
             case 1 -> this.status = StoreStatus.PREPARING;
             case 2 -> this.status = StoreStatus.RUNNING;
             case 3 -> this.status = StoreStatus.CLOSED;
             case 4 -> this.status = StoreStatus.TEMPORARY_BANDED;
             case 5 -> this.status = StoreStatus.PERMANENT_BANNED;
-            default -> throw new IllegalArgumentException("잘못된 입력 코드 store updateStatus() 1~5 까지만 가능");
+            default ->
+                throw new IllegalArgumentException("잘못된 입력 코드 store updateStatus() 1~5 까지만 가능");
         }
     }
 

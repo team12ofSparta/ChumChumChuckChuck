@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
+import com.example.sparta.domain.order.entity.Order;
 import com.example.sparta.domain.review.dto.ReviewRequestDto;
 import com.example.sparta.domain.review.entity.Review;
 import com.example.sparta.domain.review.repository.ReviewRepository;
@@ -35,12 +36,14 @@ public class ReviewRepositoryTest {
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(4, "안녕하세요", 1L, 1L);
         User user = new User("박정섭","1234","eses565@naver.com","삼천포");
         Store store = new Store();
-        Review review = new Review(reviewRequestDto, user, store);
+        Order order1 = new Order();
+        Review review = new Review(reviewRequestDto, user, store, order1);
 
         ReviewRequestDto reviewRequestDto2 = new ReviewRequestDto(4, "안녕하세요", 1L, 1L);
         User user2 = new User("김철수","1234","eses565@naver.com","삼천포");
         Store store2 = new Store();
-        Review review2 = new Review(reviewRequestDto, user2, store);
+        Order order2 = new Order();
+        Review review2 = new Review(reviewRequestDto, user2, store2, order2);
 
         List<Review> lists = new ArrayList<>();
         lists.add(review);

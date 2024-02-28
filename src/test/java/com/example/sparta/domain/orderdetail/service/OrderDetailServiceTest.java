@@ -102,7 +102,7 @@ public class OrderDetailServiceTest {
         assertNotNull(responseDto);
         assertEquals(orderDetailList.get(0).getStore().getName(), responseDto.getStoreName());
         assertEquals(orderDetailList.get(0).getMenu().getName(),
-            responseDto.getMenuNameList().get(0));
+            responseDto.getOrderDetailMenuResponseDtoList().get(0).getMenuName());
     }
 
     @Test

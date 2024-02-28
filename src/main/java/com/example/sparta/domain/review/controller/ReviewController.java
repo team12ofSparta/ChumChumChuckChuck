@@ -71,7 +71,8 @@ public class ReviewController {
     //리뷰 등록
     @PostMapping
     public ResponseEntity<ResponseDto<ReviewResponseDto>> registerReview(
-        @RequestBody ReviewRequestDto reviewRequestDto, UserDetailsImpl userDetails) {
+        @RequestBody ReviewRequestDto reviewRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         ReviewResponseDto register = reviewService.register(reviewRequestDto,
             userDetails.getUser());
@@ -87,7 +88,7 @@ public class ReviewController {
     //리뷰 삭제
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<ResponseDto<ReviewResponseDto>> deleteReview(
-        @PathVariable Long reviewId, UserDetailsImpl userDetails) {
+        @PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         reviewService.deleteOne(reviewId, userDetails.getUser());
 
