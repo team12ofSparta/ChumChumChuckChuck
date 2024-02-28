@@ -1,7 +1,6 @@
 package com.example.sparta.domain.dibs.entity;
 
 
-import com.example.sparta.domain.dibs.dto.DibsDto;
 import com.example.sparta.domain.store.entity.Store;
 import com.example.sparta.domain.user.entity.User;
 import com.example.sparta.global.entity.Timestamped;
@@ -15,8 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -36,7 +33,7 @@ public class Dibs extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Store store;
 
-    public Dibs(User user,Store store){
+    public Dibs(User user, Store store) {
         this.user = user;
         this.store = store;
     }
